@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph_main"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="moe.wisteria.android.ui.fragment.splash.SplashFragment"
+        android:label="SplashFragment"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_splashFragment_to_channelSelectorFragment"
+            app:destination="@id/channelSelectorFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/channelSelectorFragment"
+        android:name="moe.wisteria.android.ui.fragment.channelSelector.ChannelSelectorFragment"
+        android:label="ChannelSelectorFragment"
+        tools:layout="@layout/fragment_channel_selector"/>
+</navigation>

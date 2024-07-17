@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Kimoji</string>
+    <string name="network_server_connect_failed">Server connect failed!</string>
+    <string name="fragment_channel_selector_title">Channel Selector</string>
+    <string name="fragment_channel_selector_default">Default channel</string>
+    <string name="fragment_channel_selector_default_tip">Maybe need VPN</string>
+    <string name="item_channel_button">Channel %s</string>
+</resources>
