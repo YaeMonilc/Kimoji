@@ -5,14 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import moe.wisteria.android.R
 import moe.wisteria.android.entity.NetworkState
 import moe.wisteria.android.network.PICACOMIC_SERVER_URL
 import moe.wisteria.android.util.IO
-import moe.wisteria.android.util.MAIN
 import moe.wisteria.android.util.NetworkUtils
 
 class SplashModel : ViewModel() {
