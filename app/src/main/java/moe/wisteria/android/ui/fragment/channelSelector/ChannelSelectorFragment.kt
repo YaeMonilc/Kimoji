@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import moe.wisteria.android.R
 import moe.wisteria.android.databinding.FragmentChannelSelectorBinding
-import moe.wisteria.android.entity.IndicatorState
 import moe.wisteria.android.entity.NetworkState
 import moe.wisteria.android.network.setDefaultOkhttpClientDns
 import moe.wisteria.android.ui.adapter.ChannelListAdapter
