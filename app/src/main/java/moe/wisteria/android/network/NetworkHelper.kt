@@ -23,7 +23,7 @@ private object PicacomicConstValue {
     const val APP_PLATFORM = "android"
     const val APP_BUILD_VERSION = "45"
     const val ACCEPT = "application/vnd.picacomic.com.v1+json"
-    const val USER_AGENT = "okhttp/4.12.0"
+    const val USER_AGENT = "okhttp/3.8.1"
     const val CONTENT_TYPE = "application/json; charset=UTF-8"
     const val HOST = "picaapi.picacomic.com"
 
@@ -75,12 +75,12 @@ private fun getOkhttpClient(
 
                     if (url.startsWith(PICACOMIC_SERVER_URL)) {
                         PicacomicConstValue.apply {
-                            val path = url.replace(PICACOMIC_SERVER_URL, "")
+                            val path = url.replace("$PICACOMIC_SERVER_URL/", "")
                             val nonce = UUID.randomUUID().toString().replace("-", "")
                             val time = (System.currentTimeMillis() / 1000).toString()
                             val signature = HmacUtils.hmacSHA256(
                                 key = HMAC_KEY,
-                                data = "$path$time$nonce${request.method}$${ API_KEY }".lowercase()
+                                data = "$path$time$nonce${ request.method }$API_KEY".lowercase()
                             ).toHexString()
 
                             addHeader("api-key", API_KEY)
@@ -98,7 +98,7 @@ private fun getOkhttpClient(
                             addHeader("Content-Type", CONTENT_TYPE)
                             addHeader("Host", HOST)
                         }
-                        }
+                    }
                 }
             }.build()
         )

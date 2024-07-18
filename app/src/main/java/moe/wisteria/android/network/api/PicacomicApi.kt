@@ -10,6 +10,6 @@ interface PicacomicApi {
     @POST("/auth/sign-in")
     fun signIn(
         @Body
-        body: SignInBody
+        signInBody: SignInBody
     ): Call<ResponseBody>
 }

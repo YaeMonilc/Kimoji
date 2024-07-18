@@ -6,6 +6,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
+import retrofit2.awaitResponse
 
 object NetworkUtils {
     enum class Methods {
@@ -38,14 +39,14 @@ object NetworkUtils {
         }
     }
 
-    inline fun <reified SuccessType, reified ErrorType> Call<ResponseBody>.responseAnalysis(
+    suspend inline fun <reified SuccessType, reified ErrorType> Call<ResponseBody>.responseAnalysis(
         success: (SuccessType) -> Unit = {},
         error: (ErrorType) -> Unit = {},
         failure: (Exception) -> Unit = {},
         finally: () -> Unit = {}
     ) {
         try {
-            execute().let { response ->
+            awaitResponse().let { response ->
                 if (response.code() == 200) {
                     val successObject = gson.fromJson(response.body()?.string(), SuccessType::class.java)
 
@@ -53,13 +54,13 @@ object NetworkUtils {
                         if ((successObject as PicacomicStandardResponse).code == 200)
                             success(successObject)
                         else
-                            error(gson.fromJson(response.body()?.string(), ErrorType::class.java))
+                            error(gson.fromJson(response.errorBody()?.string(), ErrorType::class.java))
                     } else {
                         success(successObject)
                     }
                 }
                 else
-                    error(gson.fromJson(response.body()?.string(), ErrorType::class.java))
+                    error(gson.fromJson(response.errorBody()?.string(), ErrorType::class.java))
             }
         } catch (e: Exception) {
             failure(e)
