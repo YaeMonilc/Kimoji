@@ -16,9 +16,9 @@ object PreferenceKeys {
         val SELECTED_CHANNEL = stringPreferencesKey("SELECTED_CHANNEL")
     }
     object USER {
-        val EMAIL = stringPreferencesKey("SELECTED_CHANNEL")
-        val PASSWORD = stringPreferencesKey("SELECTED_CHANNEL")
-        val TOKEN = stringPreferencesKey("SELECTED_CHANNEL")
+        val EMAIL = stringPreferencesKey("EMAIL")
+        val PASSWORD = stringPreferencesKey("PASSWORD")
+        val TOKEN = stringPreferencesKey("TOKEN")
     }
 }
 
