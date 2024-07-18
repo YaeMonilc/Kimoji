@@ -5,6 +5,7 @@
     <data>
         <import type="android.view.View"/>
         <import type="moe.wisteria.android.entity.IndicatorState"/>
+        <import type="moe.wisteria.android.entity.NetworkState.State"/>
 
         <variable
             name="viewModel"
@@ -56,6 +57,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/fragment_sign_in_email"
+                        android:enabled="@{ viewModel.networkState.state != State.LOADING }"
                         app:endIconMode="clear_text">
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
@@ -70,6 +72,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:hint="@string/fragment_sign_in_password"
+                        android:enabled="@{ viewModel.networkState.state != State.LOADING }"
                         app:endIconMode="password_toggle"
                         app:errorEnabled="true"
                         app:helperText="@string/fragment_sign_in_password_tip">
@@ -85,6 +88,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
+                        android:enabled="@{ viewModel.networkState.state != State.LOADING }"
                         android:text="@string/fragment_sign_in_ok"/>
                 </LinearLayout>
             </LinearLayout>

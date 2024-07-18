@@ -5,11 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import moe.wisteria.android.R
 import moe.wisteria.android.databinding.FragmentSignInBinding
+import moe.wisteria.android.entity.NetworkState
 import moe.wisteria.android.ui.view.BaseFragment
+import moe.wisteria.android.util.IO
+import moe.wisteria.android.util.PreferenceKeys
 import moe.wisteria.android.util.TextInputLayoutControllerList
+import moe.wisteria.android.util.userDatastore
 
 class SignInFragment : BaseFragment(
     toolBarOption = ToolBarOption(
@@ -23,6 +32,15 @@ class SignInFragment : BaseFragment(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel.let { model ->
+            lifecycleScope.launch(IO) {
+                requireContext().userDatastore.edit {
+                    model.setEmail(it[PreferenceKeys.USER.EMAIL])
+                    model.setPassword(it[PreferenceKeys.USER.PASSWORD])
+                }
+            }
+        }
     }
 
     override fun onCreateView(
@@ -60,9 +78,40 @@ class SignInFragment : BaseFragment(
         viewModel.let { model ->
             binding.fragmentSignInOk.setOnClickListener {
                 if (textInputLayoutControllerList.checkAll()) {
-                    Toast.makeText(requireContext(), "不合格", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
+
+                model.signIn()
+            }
+
+            model.networkState.observe(viewLifecycleOwner) {
+                when (it.state) {
+                    NetworkState.State.FAILED -> {
+                        it.data?.let { stringRes ->
+                            Snackbar.make(binding.root, stringRes, Snackbar.LENGTH_SHORT).show()
+                        }
+                    }
+                    NetworkState.State.EXCEPTION -> {
+                        it.exception?.message?.let { message ->
+                            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+                        }
+                    }
+                    else -> {}
+                }
+            }
+
+            model.token.observe(viewLifecycleOwner) { token ->
+                lifecycleScope.launch(IO) {
+                    requireContext().let { context ->
+                        context.userDatastore.edit {
+                            it[PreferenceKeys.USER.EMAIL] = viewModel.email.value!!
+                            it[PreferenceKeys.USER.PASSWORD] = viewModel.password.value!!
+                            it[PreferenceKeys.USER.TOKEN] = token
+                        }
+                    }
+                }
+
+                findNavController().navigate(R.id.action_signInFragment_to_indexFragment)
             }
         }
     }
