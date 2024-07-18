@@ -60,16 +60,11 @@ class TextInputLayoutController(
 
     init {
         textInputLayout.editText?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                check()
-            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-
+                check()
             }
         })
     }
@@ -77,12 +72,14 @@ class TextInputLayoutController(
     fun check(): Boolean {
         _conditionMap.forEach { (i, function) ->
             function(textInputLayout.editText?.text.toString()).let {
-                textInputLayout.error = if (it) context.getString(i) else null
-                if (it)
+                if (it) {
+                    textInputLayout.error = context.getString(i)
                     return true
+                }
             }
-
         }
+
+        textInputLayout.error = null
         return false
     }
 
