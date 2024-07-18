@@ -13,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import moe.wisteria.android.R
 import moe.wisteria.android.databinding.FragmentSplashBinding
+import moe.wisteria.android.entity.NetworkState
 import moe.wisteria.android.ui.view.BaseFragment
 import moe.wisteria.android.util.IO
 import moe.wisteria.android.util.PreferenceKeys
@@ -67,8 +68,8 @@ class SplashFragment : BaseFragment(
 
         viewModel.let { model ->
             model.tryConnectServerState.observe(viewLifecycleOwner) {
-                if (it == SplashModel.State.FAILED)
-                    Snackbar.make(binding.root, R.string.network_server_connect_failed, Snackbar.LENGTH_SHORT).show()
+                if (it.state == NetworkState.State.FAILED)
+                    Snackbar.make(binding.root, it.data!!, Snackbar.LENGTH_SHORT).show()
             }
 
             model.navigatePosition.observe(viewLifecycleOwner) {
