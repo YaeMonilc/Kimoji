@@ -60,7 +60,7 @@ class SplashModel : ViewModel() {
                 return@launch
             }
 
-            if (tryLogin(email, password)) {
+            if (!tryLogin(email, password)) {
                 _navigatePosition.postValue(NavigatePosition.SIGN_IN)
                 return@launch
             }
@@ -84,13 +84,15 @@ class SplashModel : ViewModel() {
             data = if (result) null else R.string.network_server_connect_failed
         ))
 
-        _tryConnectServerState.value!!.state == NetworkState.State.SUCCESS
+        result
     }
 
     private suspend fun tryLogin(
         email: String,
         password: String
     ): Boolean = withContext(IO) {
+        var result = false
+
         _tryLoginState.postValue(_tryLoginState.value!!.copy(
             state = NetworkState.State.LOADING
         ))
@@ -106,21 +108,27 @@ class SplashModel : ViewModel() {
                 _tryLoginState.postValue(_tryLoginState.value!!.copy(
                     state = NetworkState.State.SUCCESS
                 ))
+
+                result = true
             },
             error = {
                 _tryLoginState.postValue(_tryLoginState.value!!.copy(
                     state = NetworkState.State.FAILED,
                     data = localizationMapping[it.message]
                 ))
+
+                result = false
             },
             failure = {
                 _tryLoginState.postValue(_tryLoginState.value!!.copy(
                     state = NetworkState.State.EXCEPTION,
                     exception = it
                 ))
+
+                result = false
             }
         )
 
-        _tryLoginState.value!!.state == NetworkState.State.SUCCESS
+        result
     }
 }
