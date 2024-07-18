@@ -31,5 +31,16 @@
         android:id="@+id/signInFragment"
         android:name="moe.wisteria.android.ui.fragment.signIn.SignInFragment"
         android:label="SignInFragment"
-        tools:layout="@layout/fragment_sign_in"/>
+        tools:layout="@layout/fragment_sign_in">
+        <action
+            android:id="@+id/action_signInFragment_to_indexFragment"
+            app:destination="@id/indexFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/signInFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/indexFragment"
+        android:name="moe.wisteria.android.ui.fragment.index.IndexFragment"
+        android:label="IndexFragment"
+        tools:layout="@layout/fragment_index"/>
 </navigation>
