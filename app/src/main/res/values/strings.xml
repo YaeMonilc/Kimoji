@@ -5,6 +5,11 @@
     <string name="fragment_channel_selector_default">Default channel</string>
     <string name="fragment_channel_selector_default_tip">Maybe need VPN</string>
     <string name="item_channel_button">Channel %s</string>
-    <string name="network_unkonwn_failed">Unkonwn failed!</string>
+    <string name="network_unknown_failed">Unknown failed!</string>
     <string name="fragment_sign_in_title">SIGN IN</string>
+    <string name="fragment_sign_in_email">Email</string>
+    <string name="fragment_sign_in_password">Password</string>
+    <string name="fragment_sign_in_password_tip">Require be more than 8 word</string>
+    <string name="fragment_sign_in_ok">OK</string>
+    <string name="view_textInput_layout_error_not_be_empty">Require be not empty</string>
 </resources>
