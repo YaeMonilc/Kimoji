@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.MenuRes
 import androidx.annotation.StringRes
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -54,9 +55,12 @@ abstract class BaseFragment(
         initToolBar()
     }
 
+    private fun getSupportActionBar(): ActionBar? {
+        return (requireActivity() as AppCompatActivity).supportActionBar
+    }
+
     private fun initToolBar() {
-        (requireActivity() as AppCompatActivity).let { activity ->
-            activity.supportActionBar?.let { actionBar ->
+        getSupportActionBar()?.let { actionBar ->
             toolBarOption.let {
                 if (it.display)
                     actionBar.show()
@@ -67,11 +71,16 @@ abstract class BaseFragment(
 
                 actionBar.title = if (it.title == null) null else getString(it.title)
 
-                activity.addMenuProvider(getMenuProvider())
+                requireActivity().addMenuProvider(getMenuProvider())
             }
-        }
         }
     }
 
     open fun getMenuProvider(): MenuProvider = DefaultMenuProvider()
+
+    fun setDisplayHomeAsUp(
+        enabled: Boolean
+    ) {
+        getSupportActionBar()?.setDisplayHomeAsUpEnabled(enabled)
+    }
 }
