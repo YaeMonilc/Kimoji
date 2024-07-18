@@ -6,4 +6,5 @@
     <string name="fragment_channel_selector_default_tip">Maybe need VPN</string>
     <string name="item_channel_button">Channel %s</string>
     <string name="network_unkonwn_failed">Unkonwn failed!</string>
+    <string name="fragment_sign_in_title">SIGN IN</string>
 </resources>

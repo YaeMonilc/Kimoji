@@ -14,6 +14,19 @@ import moe.wisteria.android.util.IO
 import moe.wisteria.android.util.NetworkUtils.responseAnalysis
 
 class ChannelSelectorModel : ViewModel() {
+    enum class NavigatePosition {
+        SIGN_IN,
+        BACK;
+
+        companion object {
+            fun getByValue(
+                value: Int
+            ): NavigatePosition? {
+                return entries.firstOrNull() { it.ordinal == value }
+            }
+        }
+    }
+
     private val _indicatorState: MutableLiveData<IndicatorState> = MutableLiveData(IndicatorState.NORMAL)
     val indicatorState: LiveData<IndicatorState> = _indicatorState
 
@@ -22,6 +35,9 @@ class ChannelSelectorModel : ViewModel() {
 
     private val _channelList: MutableLiveData<List<String>> = MutableLiveData(listOf())
     val channelList: LiveData<List<String>> = _channelList
+
+    private val _navigatePosition: MutableLiveData<NavigatePosition> = MutableLiveData(NavigatePosition.SIGN_IN)
+    val navigatePosition: LiveData<NavigatePosition> = _navigatePosition
 
     fun loadChannelList() {
         _indicatorState.postValue(IndicatorState.LOADING)
@@ -47,6 +63,14 @@ class ChannelSelectorModel : ViewModel() {
                     _indicatorState.postValue(IndicatorState.NORMAL)
                 }
             )
+        }
+    }
+
+    fun setNavigatePosition(
+        navigatePosition: NavigatePosition?
+    ) {
+        navigatePosition?.let {
+            _navigatePosition.postValue(it)
         }
     }
 }

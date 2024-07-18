@@ -12,11 +12,24 @@
         tools:layout="@layout/fragment_splash">
         <action
             android:id="@+id/action_splashFragment_to_channelSelectorFragment"
-            app:destination="@id/channelSelectorFragment" />
+            app:destination="@id/channelSelectorFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/splashFragment"/>
     </fragment>
     <fragment
         android:id="@+id/channelSelectorFragment"
         android:name="moe.wisteria.android.ui.fragment.channelSelector.ChannelSelectorFragment"
         android:label="ChannelSelectorFragment"
-        tools:layout="@layout/fragment_channel_selector"/>
+        tools:layout="@layout/fragment_channel_selector">
+        <action
+            android:id="@+id/action_channelSelectorFragment_to_signInFragment"
+            app:destination="@id/signInFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/channelSelectorFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="moe.wisteria.android.ui.fragment.signIn.SignInFragment"
+        android:label="SignInFragment"
+        tools:layout="@layout/fragment_sign_in"/>
 </navigation>
