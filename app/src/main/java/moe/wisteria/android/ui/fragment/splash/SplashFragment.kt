@@ -1,6 +1,7 @@
 package moe.wisteria.android.ui.fragment.splash
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +10,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import moe.wisteria.android.R
 import moe.wisteria.android.databinding.FragmentSplashBinding
 import moe.wisteria.android.entity.NetworkState
 import moe.wisteria.android.ui.view.BaseFragment
 import moe.wisteria.android.util.IO
+import moe.wisteria.android.util.MAIN
 import moe.wisteria.android.util.PreferenceKeys
 import moe.wisteria.android.util.appDatastore
 import moe.wisteria.android.util.userDatastore
@@ -82,14 +85,43 @@ class SplashFragment : BaseFragment(
                 }
             }
 
-            model.navigatePosition.observe(viewLifecycleOwner) {
-                findNavController().navigate(
-                    when (it) {
-                        SplashModel.NavigatePosition.CHANNEL_SELECTOR -> R.id.action_splashFragment_to_channelSelectorFragment
-                        SplashModel.NavigatePosition.SIGN_IN -> R.id.action_splashFragment_to_channelSelectorFragment
-                        else -> R.id.action_splashFragment_to_channelSelectorFragment
+            model.tryLoginState.observe(viewLifecycleOwner) {
+                when (it.state) {
+                    NetworkState.State.FAILED -> {
+                        it.data?.let { data ->
+                            Snackbar.make(binding.root, data, Snackbar.LENGTH_SHORT).show()
+                        }
                     }
-                )
+                    NetworkState.State.EXCEPTION -> {
+                        it.exception?.message?.let { message ->
+                            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+                        }
+                    }
+                    else -> {}
+                }
+            }
+
+            model.token.observe(viewLifecycleOwner) { token ->
+                lifecycleScope.launch(IO) {
+                    requireContext().userDatastore.edit {
+                        it[PreferenceKeys.USER.TOKEN] = token
+                    }
+                }
+            }
+
+            model.navigatePosition.observe(viewLifecycleOwner) {
+                lifecycleScope.launch(IO) {
+                    delay(800)
+                    launch(MAIN) {
+                        findNavController().navigate(
+                            when (it!!) {
+                                SplashModel.NavigatePosition.CHANNEL_SELECTOR -> R.id.action_splashFragment_to_channelSelectorFragment
+                                SplashModel.NavigatePosition.SIGN_IN -> R.id.action_splashFragment_to_signInFragment
+                                SplashModel.NavigatePosition.INDEX -> R.id.action_splashFragment_to_indexFragment
+                            }
+                        )
+                    }
+                }
             }
         }
     }

@@ -15,6 +15,16 @@
             app:destination="@id/channelSelectorFragment"
             app:popUpToInclusive="true"
             app:popUpTo="@id/splashFragment"/>
+        <action
+            android:id="@+id/action_splashFragment_to_indexFragment"
+            app:destination="@id/indexFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/splashFragment"/>
+        <action
+            android:id="@+id/action_splashFragment_to_signInFragment"
+            app:destination="@id/signInFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/splashFragment"/>
     </fragment>
     <fragment
         android:id="@+id/channelSelectorFragment"
