@@ -45,6 +45,9 @@ class SplashModel : ViewModel() {
                 return@launch
             }
 
+            _tryConnectServerState.postValue(_tryConnectServerState.value!!.copy(
+                state = NetworkState.State.LOADING
+            ))
             async {
                 val result = NetworkUtils.tryConnect(
                     url = PICACOMIC_SERVER_URL
@@ -61,6 +64,9 @@ class SplashModel : ViewModel() {
                 return@launch
             }
 
+            _tryLoginState.postValue(_tryLoginState.value!!.copy(
+                state = NetworkState.State.LOADING
+            ))
             async {
                 delay(1000)
                 _tryLoginState.postValue(_tryLoginState.value!!.copy(

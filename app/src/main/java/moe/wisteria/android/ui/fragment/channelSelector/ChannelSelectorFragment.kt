@@ -80,10 +80,18 @@ class ChannelSelectorFragment : BaseFragment(
             }
 
             model.networkState.observe(viewLifecycleOwner) {
-                if (it.state == NetworkState.State.FAILED) {
-                    it.data?.let { data ->
-                        Snackbar.make(binding.root, data, Snackbar.LENGTH_SHORT).show()
+                when (it.state) {
+                    NetworkState.State.FAILED -> {
+                        it.data?.let { data ->
+                            Snackbar.make(binding.root, data, Snackbar.LENGTH_SHORT).show()
+                        }
                     }
+                    NetworkState.State.EXCEPTION -> {
+                        it.exception?.message?.let { message ->
+                            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+                        }
+                    }
+                    else -> {}
                 }
             }
 

@@ -41,11 +41,18 @@ class ChannelSelectorModel : ViewModel() {
 
     fun loadChannelList() {
         _indicatorState.postValue(IndicatorState.LOADING)
+        _networkState.postValue(_networkState.value!!.copy(
+            state = NetworkState.State.LOADING
+        ))
 
         viewModelScope.launch(IO) {
             channelApi.init().responseAnalysis<ChannelInitResponse, String>(
                 success = {
                     _channelList.postValue(it.addresses)
+
+                    _networkState.postValue(_networkState.value!!.copy(
+                        state = NetworkState.State.SUCCESS
+                    ))
                 },
                 error = {
                     _networkState.postValue(_networkState.value!!.copy(
@@ -55,7 +62,7 @@ class ChannelSelectorModel : ViewModel() {
                 },
                 failure = {
                     _networkState.postValue(_networkState.value!!.copy(
-                        state = NetworkState.State.FAILED,
+                        state = NetworkState.State.EXCEPTION,
                         data = R.string.network_server_connect_failed
                     ))
                 },
