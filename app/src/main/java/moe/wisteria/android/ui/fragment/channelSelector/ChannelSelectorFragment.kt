@@ -8,11 +8,8 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import moe.wisteria.android.R
 import moe.wisteria.android.databinding.FragmentChannelSelectorBinding
-import moe.wisteria.android.entity.IndicatorState
-import moe.wisteria.android.entity.NetworkState
 import moe.wisteria.android.ui.adapter.ChannelListAdapter
 import moe.wisteria.android.ui.view.BaseFragment
 
@@ -55,18 +52,10 @@ class ChannelSelectorFragment : BaseFragment(
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             }
 
-            model.indicatorState.observe(viewLifecycleOwner) {
-                binding.fragmentChannelSelectorIndicator.visibility = when (it!!) {
-                    IndicatorState.NORMAL -> View.GONE
-                    IndicatorState.LOADING -> View.VISIBLE
-                }
-            }
-
-            model.networkState.observe(viewLifecycleOwner) {
-                if (it.state == NetworkState.State.FAILED) {
-                    it.data?.let { data ->
-                        Snackbar.make(binding.root, data, Snackbar.LENGTH_SHORT).show()
-                    }
+            model.state.observe(viewLifecycleOwner) {
+                binding.fragmentChannelSelectorIndicator.visibility = when (it) {
+                    ChannelSelectorModel.State.LOADING -> View.VISIBLE
+                    else -> View.GONE
                 }
             }
 
