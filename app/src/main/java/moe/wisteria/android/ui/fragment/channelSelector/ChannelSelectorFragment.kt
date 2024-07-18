@@ -47,7 +47,10 @@ class ChannelSelectorFragment : BaseFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return FragmentChannelSelectorBinding.inflate(inflater, container, false).also {
+        return FragmentChannelSelectorBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = this@ChannelSelectorFragment.viewModel
+        }.also {
             binding = it
         }.root
     }
@@ -69,13 +72,6 @@ class ChannelSelectorFragment : BaseFragment(
 
             binding.fragmentChannelSelectorDefault.setOnClickListener {
                 onChannelSelected(null)
-            }
-
-            model.indicatorState.observe(viewLifecycleOwner) {
-                binding.fragmentChannelSelectorIndicator.visibility = when (it!!) {
-                    IndicatorState.NORMAL -> View.GONE
-                    IndicatorState.LOADING -> View.VISIBLE
-                }
             }
 
             model.networkState.observe(viewLifecycleOwner) {

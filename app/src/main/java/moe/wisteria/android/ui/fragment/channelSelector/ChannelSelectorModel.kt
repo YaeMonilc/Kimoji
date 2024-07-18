@@ -50,7 +50,7 @@ class ChannelSelectorModel : ViewModel() {
                 error = {
                     _networkState.postValue(_networkState.value!!.copy(
                         state = NetworkState.State.FAILED,
-                        data = R.string.network_unkonwn_failed
+                        data = R.string.network_unknown_failed
                     ))
                 },
                 failure = {
