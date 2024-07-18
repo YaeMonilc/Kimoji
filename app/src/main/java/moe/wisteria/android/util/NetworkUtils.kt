@@ -50,8 +50,8 @@ object NetworkUtils {
                 if (response.code() == 200) {
                     val successObject = gson.fromJson(response.body()?.string(), SuccessType::class.java)
 
-                    if (SuccessType::class is PicacomicStandardResponse) {
-                        if ((successObject as PicacomicStandardResponse).code == 200)
+                    if (SuccessType::class is PicacomicStandardResponse<*>) {
+                        if ((successObject as PicacomicStandardResponse<*>).code == 200)
                             success(successObject)
                         else
                             error(gson.fromJson(response.errorBody()?.string(), ErrorType::class.java))

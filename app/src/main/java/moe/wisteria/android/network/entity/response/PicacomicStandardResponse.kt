@@ -1,7 +1,7 @@
 package moe.wisteria.android.network.entity.response
 
-open class PicacomicStandardResponse(
+open class PicacomicStandardResponse<T>(
     val code: Int,
     val message: String,
-    open val data: Any?
+    val data: T?
 )
