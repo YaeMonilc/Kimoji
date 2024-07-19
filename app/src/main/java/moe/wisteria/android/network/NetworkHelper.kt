@@ -1,7 +1,7 @@
 package moe.wisteria.android.network
 
 import moe.wisteria.android.network.api.ChannelApi
-import moe.wisteria.android.network.api.PicacomicApi
+import moe.wisteria.android.network.api.PicaApi
 import moe.wisteria.android.util.HmacUtils
 import okhttp3.Dns
 import okhttp3.OkHttpClient
@@ -39,10 +39,10 @@ val channelApi: ChannelApi by lazy {
     ).create(ChannelApi::class.java)
 }
 
-val picacomicApi: PicacomicApi by lazy {
+val picaApi: PicaApi by lazy {
     getBaseRetrofit(
         baseUrl = PICACOMIC_SERVER_URL
-    ).create(PicacomicApi::class.java)
+    ).create(PicaApi::class.java)
 }
 
 private fun getBaseRetrofit(

@@ -6,7 +6,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-interface PicacomicApi {
+interface PicaApi {
     @POST("/auth/sign-in")
     fun signIn(
         @Body
