@@ -10,6 +10,6 @@ interface PicaApi {
     @POST("/auth/sign-in")
     fun signIn(
         @Body
-        signInBody: SignInBody
+        body: SignInBody
     ): Call<ResponseBody>
 }
