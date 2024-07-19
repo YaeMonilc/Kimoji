@@ -71,12 +71,10 @@ class SplashFragment : BaseFragment(
         viewModel.let { viewModel ->
 
             viewModel.signInResponse.observe(viewLifecycleOwner) {
-                it.onSuccess { data ->
-                    data?.let {
-                        lifecycleScope.launch(IO) {
-                            requireContext().userDatastore.edit { userDatastore ->
-                                userDatastore[PreferenceKeys.USER.TOKEN] = it.data.token
-                            }
+                it.onSuccess {
+                    lifecycleScope.launch(IO) {
+                        requireContext().userDatastore.edit { userDatastore ->
+                            userDatastore[PreferenceKeys.USER.TOKEN] = it.data.token
                         }
                     }
                 }.onException { exception ->
@@ -88,7 +86,7 @@ class SplashFragment : BaseFragment(
 
             viewModel.navigatePosition.observe(viewLifecycleOwner) {
                 lifecycleScope.launch(IO) {
-                    delay(800)
+                    delay(1800)
                     launch(MAIN) {
                         findNavController().navigate(
                             when (it!!) {
