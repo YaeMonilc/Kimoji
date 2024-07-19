@@ -43,11 +43,9 @@ class TextInputLayoutControllerList(
     }
 
     fun checkAll(): Boolean {
-        textInputLayoutList.forEach {
-            if (!it.check())
-                return false
-        }
-        return true
+        return textInputLayoutList.map {
+            it.check()
+        }.all { !it }
     }
 }
 
