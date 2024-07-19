@@ -9,11 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import moe.wisteria.android.R
 import moe.wisteria.android.databinding.FragmentChannelSelectorBinding
-import moe.wisteria.android.entity.NetworkState
 import moe.wisteria.android.network.setDefaultOkhttpClientDns
 import moe.wisteria.android.ui.adapter.ChannelListAdapter
 import moe.wisteria.android.ui.view.BaseFragment
@@ -37,7 +35,6 @@ class ChannelSelectorFragment : BaseFragment(
         super.onCreate(savedInstanceState)
 
         viewModel.let { model ->
-            model.loadChannelList()
 
             arguments?.getInt(NAVIGATION_PARAM_NAVIGATE_POSITION)?.let {
                 model.setNavigatePosition(
@@ -67,7 +64,7 @@ class ChannelSelectorFragment : BaseFragment(
             binding.fragmentChannelSelectorList.apply {
                 adapter = ChannelListAdapter(
                     context = requireContext(),
-                    channelList = model.channelList.value!!,
+                    channelList = listOf(),
                     itemOnClickListener = {
                         onChannelSelected(it)
                     }
@@ -77,28 +74,6 @@ class ChannelSelectorFragment : BaseFragment(
 
             binding.fragmentChannelSelectorDefault.setOnClickListener {
                 onChannelSelected(null)
-            }
-
-            model.networkState.observe(viewLifecycleOwner) {
-                when (it.state) {
-                    NetworkState.State.FAILED -> {
-                        it.data?.let { data ->
-                            Snackbar.make(binding.root, data, Snackbar.LENGTH_SHORT).show()
-                        }
-                    }
-                    NetworkState.State.EXCEPTION -> {
-                        it.exception?.message?.let { message ->
-                            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
-                        }
-                    }
-                    else -> {}
-                }
-            }
-
-            model.channelList.observe(viewLifecycleOwner) {
-                binding.fragmentChannelSelectorList.apply {
-                    (adapter as ChannelListAdapter).noticeChange(it)
-                }
             }
 
             model.navigatePosition.observe(viewLifecycleOwner) {
