@@ -9,8 +9,6 @@ import kotlinx.coroutines.withContext
 import moe.wisteria.android.network.PICACOMIC_SERVER_URL
 import moe.wisteria.android.network.entity.body.SignInBody
 import moe.wisteria.android.network.entity.response.PicaResponse
-import moe.wisteria.android.network.entity.response.PicaResponse.Companion.onError
-import moe.wisteria.android.network.entity.response.PicaResponse.Companion.onSuccess
 import moe.wisteria.android.network.picaApi
 import moe.wisteria.android.util.IO
 import moe.wisteria.android.util.NetworkUtils

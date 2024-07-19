@@ -1,6 +1,5 @@
 package moe.wisteria.android.util
 
-import moe.wisteria.android.network.api.PicaApi
 import moe.wisteria.android.network.defaultOkHttpClient
 import moe.wisteria.android.network.entity.response.PicaResponse
 import okhttp3.Request
