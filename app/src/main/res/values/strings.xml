@@ -13,4 +13,5 @@
     <string name="fragment_sign_in_ok">OK</string>
     <string name="view_textInput_layout_error_not_be_empty">Require be not empty</string>
     <string name="network_invalid_email_or_password">Invalid email or password!</string>
+    <string name="network_unknown_response">Unknown response!</string>
 </resources>

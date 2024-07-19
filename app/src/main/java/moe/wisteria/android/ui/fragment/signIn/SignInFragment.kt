@@ -7,13 +7,19 @@ import android.view.ViewGroup
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import moe.wisteria.android.R
 import moe.wisteria.android.databinding.FragmentSignInBinding
+import moe.wisteria.android.network.entity.response.PicaResponse.Companion.onError
+import moe.wisteria.android.network.entity.response.PicaResponse.Companion.onException
+import moe.wisteria.android.network.entity.response.PicaResponse.Companion.onSuccess
 import moe.wisteria.android.ui.view.BaseFragment
 import moe.wisteria.android.util.IO
 import moe.wisteria.android.util.PreferenceKeys
 import moe.wisteria.android.util.TextInputLayoutControllerList
+import moe.wisteria.android.util.getLocalization
 import moe.wisteria.android.util.userDatastore
 
 class SignInFragment : BaseFragment(
@@ -71,8 +77,32 @@ class SignInFragment : BaseFragment(
             )
         }
 
-        viewModel.let { model ->
+        viewModel.let { viewModel ->
+            viewModel.signInResponse.observe(viewLifecycleOwner) {
+                it.onSuccess { data ->
+                    lifecycleScope.launch(IO) {
+                        requireContext().userDatastore.edit { userDatastore ->
+                            userDatastore[PreferenceKeys.USER.TOKEN] = data.data.token
+                        }
+                    }
 
+                    findNavController().navigate(R.id.action_signInFragment_to_indexFragment)
+                }.onError { errorResponse ->
+                    Snackbar.make(binding.root, getLocalization(errorResponse.message), Snackbar.LENGTH_LONG).show()
+                }.onException { exception ->
+                    exception.message?.let { message ->
+                        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
+                    }
+                }
+            }
+
+            binding.fragmentSignInOk.setOnClickListener {
+                if (!textInputLayoutControllerList.checkAll()) {
+                    return@setOnClickListener
+                }
+
+                viewModel.signIn()
+            }
         }
     }
 

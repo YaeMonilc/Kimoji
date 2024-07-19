@@ -56,6 +56,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/fragment_sign_in_email"
+                        android:enabled="@{ viewModel.indicatorState == IndicatorState.NORMAL }"
                         app:endIconMode="clear_text">
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
@@ -70,6 +71,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:hint="@string/fragment_sign_in_password"
+                        android:enabled="@{ viewModel.indicatorState == IndicatorState.NORMAL }"
                         app:endIconMode="password_toggle"
                         app:errorEnabled="true"
                         app:helperText="@string/fragment_sign_in_password_tip">
@@ -85,7 +87,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:text="@string/fragment_sign_in_ok"/>
+                        android:text="@string/fragment_sign_in_ok"
+                        android:enabled="@{ viewModel.indicatorState == IndicatorState.NORMAL }"/>
                 </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
