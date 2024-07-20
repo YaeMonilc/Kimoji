@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="moe.wisteria.android.ui.fragment.splash.SplashFragment"
+        android:name="moe.wisteria.android.kimoji.ui.fragment.splash.SplashFragment"
         android:label="SplashFragment"
         tools:layout="@layout/fragment_splash">
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/channelSelectorFragment"
-        android:name="moe.wisteria.android.ui.fragment.channelSelector.ChannelSelectorFragment"
+        android:name="moe.wisteria.android.kimoji.ui.fragment.channelSelector.ChannelSelectorFragment"
         android:label="ChannelSelectorFragment"
         tools:layout="@layout/fragment_channel_selector">
         <action
@@ -39,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
-        android:name="moe.wisteria.android.ui.fragment.signIn.SignInFragment"
+        android:name="moe.wisteria.android.kimoji.ui.fragment.signIn.SignInFragment"
         android:label="SignInFragment"
         tools:layout="@layout/fragment_sign_in">
         <action
@@ -50,7 +50,7 @@
     </fragment>
     <fragment
         android:id="@+id/indexFragment"
-        android:name="moe.wisteria.android.ui.fragment.index.IndexFragment"
+        android:name="moe.wisteria.android.kimoji.ui.fragment.index.IndexFragment"
         android:label="IndexFragment"
         tools:layout="@layout/fragment_index"/>
 </navigation>

@@ -4,11 +4,11 @@
 
     <data>
         <import type="android.view.View"/>
-        <import type="moe.wisteria.android.entity.IndicatorState"/>
+        <import type="moe.wisteria.android.kimoji.entity.IndicatorState"/>
 
         <variable
             name="viewModel"
-            type="moe.wisteria.android.ui.fragment.signIn.SignInModel" />
+            type="moe.wisteria.android.kimoji.ui.fragment.signIn.SignInModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

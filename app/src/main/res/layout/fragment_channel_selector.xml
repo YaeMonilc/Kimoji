@@ -5,11 +5,11 @@
 
     <data>
         <import type="android.view.View"/>
-        <import type="moe.wisteria.android.entity.IndicatorState"/>
+        <import type="moe.wisteria.android.kimoji.entity.IndicatorState"/>
 
         <variable
             name="viewModel"
-            type="moe.wisteria.android.ui.fragment.channelSelector.ChannelSelectorModel" />
+            type="moe.wisteria.android.kimoji.ui.fragment.channelSelector.ChannelSelectorModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,40 +40,27 @@
                 android:paddingEnd="30dp"
                 android:gravity="center"
                 android:orientation="vertical">
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/image_header_a"
-                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"/>
 
-                <LinearLayout
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/fragment_channel_selector_default"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
-                    android:orientation="vertical">
+                    android:text="@string/fragment_channel_selector_default" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/fragment_channel_selector_default"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/fragment_channel_selector_default" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/fragment_channel_selector_default_tip" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/fragment_channel_selector_default_tip" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/fragment_channel_selector_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:nestedScrollingEnabled="false"
-                        tools:itemCount="2"
-                        tools:listitem="@layout/item_channel" />
-                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/fragment_channel_selector_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:nestedScrollingEnabled="false"
+                    tools:itemCount="2"
+                    tools:listitem="@layout/item_channel" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

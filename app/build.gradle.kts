@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "moe.wisteria.android"
+    namespace = "moe.wisteria.android.kimoji"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "moe.wisteria.android"
+        applicationId = "moe.wisteria.android.kimoji"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
