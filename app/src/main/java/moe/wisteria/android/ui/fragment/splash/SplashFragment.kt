@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.TranslateAnimation
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
@@ -16,11 +18,13 @@ import moe.wisteria.android.databinding.FragmentSplashBinding
 import moe.wisteria.android.network.entity.response.PicaResponse.Companion.onException
 import moe.wisteria.android.network.entity.response.PicaResponse.Companion.onSuccess
 import moe.wisteria.android.ui.view.BaseFragment
-import moe.wisteria.android.util.IO
 import moe.wisteria.android.util.MAIN
 import moe.wisteria.android.util.PreferenceKeys
 import moe.wisteria.android.util.appDatastore
+import moe.wisteria.android.util.launchIO
+import moe.wisteria.android.util.launchUI
 import moe.wisteria.android.util.userDatastore
+import kotlin.random.Random
 
 class SplashFragment : BaseFragment(
     toolBarOption = ToolBarOption(
@@ -30,26 +34,18 @@ class SplashFragment : BaseFragment(
     private lateinit var binding: FragmentSplashBinding
     private val viewModel: SplashModel by viewModels()
 
+    private val animationList: MutableList<Animation> = mutableListOf()
+
+    companion object {
+        object AnimationOption  {
+            const val TRANSLATE_IMAGE_DURATION = 1800L
+        }
+    }
+
     override fun onCreate(
         savedInstanceState: Bundle?
     ) {
         super.onCreate(savedInstanceState)
-
-        viewModel.let { viewModel ->
-            requireContext().let { context ->
-                lifecycleScope.launch(IO) {
-                    context.appDatastore.edit { appDatastore ->
-                        context.userDatastore.edit { userDatastore ->
-                            viewModel.init(
-                                channel = appDatastore[PreferenceKeys.APP.SELECTED_CHANNEL],
-                                email = userDatastore[PreferenceKeys.USER.EMAIL],
-                                password = userDatastore[PreferenceKeys.USER.PASSWORD]
-                            )
-                        }
-                    }
-                }
-            }
-        }
     }
 
     override fun onCreateView(
@@ -69,10 +65,49 @@ class SplashFragment : BaseFragment(
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.let { viewModel ->
+            launchUI {
+                requireContext().let { context ->
+                    if (Random.nextBoolean()) {
+                        animationList.add(
+                            TranslateAnimation(
+                                Animation.RELATIVE_TO_SELF,
+                                0f,
+                                Animation.RELATIVE_TO_SELF,
+                                0f,
+                                Animation.RELATIVE_TO_SELF,
+                                1f,
+                                Animation.RELATIVE_TO_SELF,
+                                0f
+                            ).apply {
+                                duration = AnimationOption.TRANSLATE_IMAGE_DURATION
+                                interpolator = AccelerateDecelerateInterpolator()
+                            }.also {
+                                binding.fragmentSplashImage.startAnimation(it)
+                            }
+                        )
+
+                        delay(AnimationOption.TRANSLATE_IMAGE_DURATION)
+                    } else {
+                        binding.fragmentSplashImage.visibility = View.GONE
+                    }
+
+                    launchIO {
+                        context.appDatastore.edit { appDatastore ->
+                            context.userDatastore.edit { userDatastore ->
+                                viewModel.init(
+                                    channel = appDatastore[PreferenceKeys.APP.SELECTED_CHANNEL],
+                                    email = userDatastore[PreferenceKeys.USER.EMAIL],
+                                    password = userDatastore[PreferenceKeys.USER.PASSWORD]
+                                )
+                            }
+                        }
+                    }
+                }
+            }
 
             viewModel.signInResponse.observe(viewLifecycleOwner) {
                 it.onSuccess {
-                    lifecycleScope.launch(IO) {
+                    launchIO {
                         requireContext().userDatastore.edit { userDatastore ->
                             userDatastore[PreferenceKeys.USER.TOKEN] = it.data.token
                         }
@@ -85,7 +120,7 @@ class SplashFragment : BaseFragment(
             }
 
             viewModel.navigatePosition.observe(viewLifecycleOwner) {
-                lifecycleScope.launch(IO) {
+                launchIO {
                     delay(1800)
                     launch(MAIN) {
                         findNavController().navigate(
@@ -103,5 +138,11 @@ class SplashFragment : BaseFragment(
 
     override fun onStart() {
         super.onStart()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        animationList.forEach { it.cancel() }
     }
 }

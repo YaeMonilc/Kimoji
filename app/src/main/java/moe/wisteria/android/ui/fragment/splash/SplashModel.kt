@@ -3,8 +3,6 @@ package moe.wisteria.android.ui.fragment.splash
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import moe.wisteria.android.network.PICACOMIC_SERVER_URL
 import moe.wisteria.android.network.entity.body.SignInBody
@@ -13,6 +11,7 @@ import moe.wisteria.android.network.picaApi
 import moe.wisteria.android.util.IO
 import moe.wisteria.android.util.NetworkUtils
 import moe.wisteria.android.util.executeForPica
+import moe.wisteria.android.util.launchIO
 
 class SplashModel : ViewModel() {
     enum class NavigatePosition {
@@ -33,20 +32,20 @@ class SplashModel : ViewModel() {
         email: String?,
         password: String?
     ) {
-        viewModelScope.launch(IO) {
+        launchIO {
             if (channel == null) {
                 _navigatePosition.postValue(NavigatePosition.CHANNEL_SELECTOR)
-                return@launch
+                return@launchIO
             }
 
             if (email == null || password == null) {
                 _navigatePosition.postValue(NavigatePosition.SIGN_IN)
-                return@launch
+                return@launchIO
             }
 
             if (!tryConnectServer()) {
                 _navigatePosition.postValue(NavigatePosition.CHANNEL_SELECTOR)
-                return@launch
+                return@launchIO
             }
 
             if (trySignIn(
@@ -55,7 +54,7 @@ class SplashModel : ViewModel() {
                 ).status != PicaResponse.Status.SUCCESS
             ) {
                 _navigatePosition.postValue(NavigatePosition.SIGN_IN)
-                return@launch
+                return@launchIO
             }
 
             _navigatePosition.postValue(NavigatePosition.INDEX)
