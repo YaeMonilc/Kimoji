@@ -60,11 +60,11 @@ class ChannelSelectorFragment : BaseFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.let { model ->
+        viewModel.let { viewModel ->
             binding.fragmentChannelSelectorList.apply {
                 adapter = ChannelListAdapter(
                     context = requireContext(),
-                    channelList = listOf(),
+                    channelList = viewModel.channelList.value!!,
                     itemOnClickListener = {
                         onChannelSelected(it)
                     }
@@ -76,7 +76,15 @@ class ChannelSelectorFragment : BaseFragment(
                 onChannelSelected(null)
             }
 
-            model.navigatePosition.observe(viewLifecycleOwner) {
+            viewModel.channelList.observe(viewLifecycleOwner) {
+                binding.fragmentChannelSelectorList.apply {
+                    adapter.let { adapter ->
+                        (adapter as ChannelListAdapter).noticeChange(it)
+                    }
+                }
+            }
+
+            viewModel.navigatePosition.observe(viewLifecycleOwner) {
                 setDisplayHomeAsUp(it == ChannelSelectorModel.NavigatePosition.BACK)
             }
         }

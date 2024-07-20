@@ -1,6 +1,7 @@
 package moe.wisteria.android.kimoji.ui.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,8 +10,8 @@ import moe.wisteria.android.kimoji.databinding.ItemChannelBinding
 
 class ChannelListAdapter(
     private val context: Context,
-    private val channelList: List<String>,
-    private val itemOnClickListener: ((String) -> Unit) = { }
+    private val itemOnClickListener: ((String) -> Unit) = { },
+    channelList: List<String>
 ) : RecyclerView.Adapter<ChannelListAdapter.ViewHolder>() {
     private val _channelList: MutableList<String> = channelList.toMutableList()
 
@@ -49,8 +50,9 @@ class ChannelListAdapter(
     fun noticeChange(
         channelList: List<String>
     ) {
-        val size = _channelList.size
-        _channelList.addAll(channelList)
-        notifyItemRangeInserted(size, _channelList.size)
+        channelList.let {
+            _channelList.addAll(it)
+            notifyItemRangeInserted(getItemCount() - it.size, it.size)
+        }
     }
 }
