@@ -52,7 +52,7 @@ class TextInputLayoutControllerList(
 class TextInputLayoutController(
     private val context: Context,
     val textInputLayout: TextInputLayout,
-    private val conditionMap: Map<Int, (String?) -> Boolean>
+    conditionMap: Map<Int, (String?) -> Boolean>
 ) {
     private val _conditionMap: MutableMap<Int, (String?) -> Boolean> = conditionMap.toMutableMap()
 
