@@ -3,13 +3,10 @@ package moe.wisteria.android.ui.fragment.signIn
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import moe.wisteria.android.entity.IndicatorState
 import moe.wisteria.android.network.entity.body.SignInBody
 import moe.wisteria.android.network.entity.response.PicaResponse
 import moe.wisteria.android.network.picaApi
-import moe.wisteria.android.util.IO
 import moe.wisteria.android.util.executeForPica
 import moe.wisteria.android.util.launchIO
 
