@@ -1,5 +1,6 @@
 package moe.wisteria.android.kimoji.util
 
+import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
@@ -11,6 +12,14 @@ import moe.wisteria.android.kimoji.ui.view.BaseFragment
 
 val MAIN = Dispatchers.Main
 val IO = Dispatchers.IO
+
+fun Application.launchUI(block: suspend CoroutineScope.() -> Unit) = CoroutineScope(MAIN).launch {
+    block()
+}
+
+fun Application.launchIO(block: suspend CoroutineScope.() -> Unit) = CoroutineScope(IO).launch {
+    block()
+}
 
 fun AppCompatActivity.launchUI(block: suspend CoroutineScope.() -> Unit) = lifecycleScope.launch(
     MAIN

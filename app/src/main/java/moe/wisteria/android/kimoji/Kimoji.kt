@@ -9,6 +9,7 @@ import moe.wisteria.android.kimoji.network.setDefaultOkhttpClientDns
 import moe.wisteria.android.kimoji.util.IO
 import moe.wisteria.android.kimoji.util.PreferenceKeys
 import moe.wisteria.android.kimoji.util.appDatastore
+import moe.wisteria.android.kimoji.util.launchIO
 
 class Kimoji : Application() {
     override fun onCreate() {
@@ -19,7 +20,7 @@ class Kimoji : Application() {
     }
 
     private fun initDefaultOkhttpClient() {
-        CoroutineScope(IO).launch {
+        launchIO {
             appDatastore.edit {
                 setDefaultOkhttpClientDns(it[PreferenceKeys.APP.SELECTED_CHANNEL])
             }
