@@ -25,7 +25,7 @@ import moe.wisteria.android.util.userDatastore
 
 class SignInFragment : BaseFragment(
     toolBarOption = ToolBarOption(
-        title = R.string.fragment_sign_in_title
+        title = null
     )
 ) {
     private lateinit var binding: FragmentSignInBinding
