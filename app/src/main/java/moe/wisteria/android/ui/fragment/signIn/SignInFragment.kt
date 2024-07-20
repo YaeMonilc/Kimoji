@@ -20,6 +20,7 @@ import moe.wisteria.android.util.IO
 import moe.wisteria.android.util.PreferenceKeys
 import moe.wisteria.android.util.TextInputLayoutControllerList
 import moe.wisteria.android.util.getLocalization
+import moe.wisteria.android.util.launchIO
 import moe.wisteria.android.util.userDatastore
 
 class SignInFragment : BaseFragment(
@@ -36,7 +37,7 @@ class SignInFragment : BaseFragment(
         super.onCreate(savedInstanceState)
 
         viewModel.let { model ->
-            lifecycleScope.launch(IO) {
+            launchIO {
                 requireContext().userDatastore.edit {
                     model.setEmail(it[PreferenceKeys.USER.EMAIL])
                     model.setPassword(it[PreferenceKeys.USER.PASSWORD])

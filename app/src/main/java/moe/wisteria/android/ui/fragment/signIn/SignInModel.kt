@@ -11,6 +11,7 @@ import moe.wisteria.android.network.entity.response.PicaResponse
 import moe.wisteria.android.network.picaApi
 import moe.wisteria.android.util.IO
 import moe.wisteria.android.util.executeForPica
+import moe.wisteria.android.util.launchIO
 
 class SignInModel : ViewModel() {
 
@@ -39,7 +40,7 @@ class SignInModel : ViewModel() {
     fun signIn() {
         _indicatorState.postValue(IndicatorState.LOADING)
 
-        viewModelScope.launch(IO) {
+        launchIO {
             picaApi.signIn(
                 body = SignInBody(
                     email = email.value!!,
