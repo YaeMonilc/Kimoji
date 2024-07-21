@@ -1,10 +1,12 @@
 package moe.wisteria.android.kimoji.ui.view
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.MenuRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.ActionBar
@@ -15,29 +17,27 @@ import androidx.fragment.app.Fragment
 abstract class BaseFragment(
     private val toolBarOption: ToolBarOption = ToolBarOption()
 ) : Fragment() {
-    companion object {
-        open class DefaultMenuProvider(
-            @MenuRes
-            private val menuRes: Int? = null,
-            private val homeAsUpOnClick: () -> Boolean = { true },
-            private val onMenuItemClick: (MenuItem) -> Boolean = { false }
-        ) : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menu.clear()
+    open class DefaultMenuProvider(
+        @MenuRes
+        private val menuRes: Int? = null
+    ) : MenuProvider {
+        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            menu.clear()
 
-                menuRes?.let {
-                    menuInflater.inflate(it, menu)
-                }
+            menuRes?.let {
+                menuInflater.inflate(it, menu)
             }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    android.R.id.home -> homeAsUpOnClick()
-                    else -> onMenuItemClick(menuItem)
-                }
-            }
-
         }
+
+        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+            return when (menuItem.itemId) {
+                android.R.id.home -> onHomeAsUpClick()
+                else -> onMenuItemClick(menuItem)
+            }
+        }
+
+        open fun onHomeAsUpClick() = false
+        open fun onMenuItemClick(menuItem: MenuItem) = false
     }
 
     data class ToolBarOption(
@@ -47,10 +47,13 @@ abstract class BaseFragment(
         val display: Boolean = true
     )
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         initToolBar()
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     private fun getSupportActionBar(): ActionBar? {
@@ -69,9 +72,15 @@ abstract class BaseFragment(
 
                 actionBar.title = if (it.title == null) null else getString(it.title)
 
-                requireActivity().addMenuProvider(getMenuProvider())
+                setMenuProvider(getMenuProvider())
             }
         }
+    }
+
+    private fun setMenuProvider(
+        menuProvider: MenuProvider
+    ) {
+        requireActivity().addMenuProvider(menuProvider, viewLifecycleOwner)
     }
 
     open fun getMenuProvider(): MenuProvider = DefaultMenuProvider()
