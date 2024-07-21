@@ -52,8 +52,13 @@ abstract class BaseFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        initToolBar()
         return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        initToolBar()
     }
 
     private fun getSupportActionBar(): ActionBar? {
