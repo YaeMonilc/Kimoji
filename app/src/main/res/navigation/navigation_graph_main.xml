@@ -14,17 +14,29 @@
             android:id="@+id/action_splashFragment_to_channelSelectorFragment"
             app:destination="@id/channelSelectorFragment"
             app:popUpToInclusive="true"
-            app:popUpTo="@id/splashFragment"/>
+            app:popUpTo="@id/splashFragment"
+            app:enterAnim="@anim/anim_navigation_default_enter"
+            app:exitAnim="@anim/anim_navigation_default_exit"
+            app:popEnterAnim="@anim/anim_navigation_default_pop_enter"
+            app:popExitAnim="@anim/anim_navigation_default_pop_exit"/>
         <action
             android:id="@+id/action_splashFragment_to_indexFragment"
             app:destination="@id/indexFragment"
             app:popUpToInclusive="true"
-            app:popUpTo="@id/splashFragment"/>
+            app:popUpTo="@id/splashFragment"
+            app:enterAnim="@anim/anim_navigation_default_enter"
+            app:exitAnim="@anim/anim_navigation_default_exit"
+            app:popEnterAnim="@anim/anim_navigation_default_pop_enter"
+            app:popExitAnim="@anim/anim_navigation_default_pop_exit"/>
         <action
             android:id="@+id/action_splashFragment_to_signInFragment"
             app:destination="@id/signInFragment"
             app:popUpToInclusive="true"
-            app:popUpTo="@id/splashFragment"/>
+            app:popUpTo="@id/splashFragment"
+            app:enterAnim="@anim/anim_navigation_default_enter"
+            app:exitAnim="@anim/anim_navigation_default_exit"
+            app:popEnterAnim="@anim/anim_navigation_default_pop_enter"
+            app:popExitAnim="@anim/anim_navigation_default_pop_exit"/>
     </fragment>
     <fragment
         android:id="@+id/channelSelectorFragment"
@@ -35,7 +47,11 @@
             android:id="@+id/action_channelSelectorFragment_to_signInFragment"
             app:destination="@id/signInFragment"
             app:popUpToInclusive="true"
-            app:popUpTo="@id/channelSelectorFragment"/>
+            app:popUpTo="@id/channelSelectorFragment"
+            app:enterAnim="@anim/anim_navigation_default_enter"
+            app:exitAnim="@anim/anim_navigation_default_exit"
+            app:popEnterAnim="@anim/anim_navigation_default_pop_enter"
+            app:popExitAnim="@anim/anim_navigation_default_pop_exit"/>
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -46,10 +62,18 @@
             android:id="@+id/action_signInFragment_to_indexFragment"
             app:destination="@id/indexFragment"
             app:popUpToInclusive="true"
-            app:popUpTo="@id/signInFragment"/>
+            app:popUpTo="@id/signInFragment"
+            app:enterAnim="@anim/anim_navigation_default_enter"
+            app:exitAnim="@anim/anim_navigation_default_exit"
+            app:popEnterAnim="@anim/anim_navigation_default_pop_enter"
+            app:popExitAnim="@anim/anim_navigation_default_pop_exit"/>
         <action
             android:id="@+id/action_signInFragment_to_registerFragment"
-            app:destination="@id/registerFragment" />
+            app:destination="@id/registerFragment"
+            app:enterAnim="@anim/anim_navigation_default_enter"
+            app:exitAnim="@anim/anim_navigation_default_exit"
+            app:popEnterAnim="@anim/anim_navigation_default_pop_enter"
+            app:popExitAnim="@anim/anim_navigation_default_pop_exit"/>
     </fragment>
     <fragment
         android:id="@+id/indexFragment"
