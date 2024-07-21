@@ -52,7 +52,8 @@ class SplashFragment : BaseFragment(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View {super.onCreateView(inflater, container, savedInstanceState)
+
         return FragmentSplashBinding.inflate(inflater, container, false).also {
             binding = it
         }.root

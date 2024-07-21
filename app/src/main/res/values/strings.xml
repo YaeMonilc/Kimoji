@@ -9,9 +9,11 @@
     <string name="fragment_sign_in_title">SIGN IN</string>
     <string name="fragment_sign_in_email">Email</string>
     <string name="fragment_sign_in_password">Password</string>
-    <string name="fragment_sign_in_password_tip">Require be more than 8 word</string>
+    <string name="fragment_sign_in_password_tip">Require more than 8 word</string>
     <string name="fragment_sign_in_ok">OK</string>
-    <string name="view_textInput_layout_error_not_be_empty">Require be not empty</string>
+    <string name="view_textInput_layout_error_not_be_empty">Require not empty</string>
     <string name="network_invalid_email_or_password">Invalid email or password!</string>
     <string name="network_unknown_response">Unknown response!</string>
+    <string name="menu_action_navigate_register">Navigate register</string>
+    <string name="fragment_register_title">Register</string>
 </resources>

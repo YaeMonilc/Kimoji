@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initToolBar() {
-        setSupportActionBar(binding.activityMainToolbar)
+        setSupportActionBar(binding.activityMainToolbar.apply {
+            title = null
+        })
     }
 }

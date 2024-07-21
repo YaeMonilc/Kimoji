@@ -2,8 +2,10 @@ package moe.wisteria.android.kimoji.ui.fragment.signIn
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.MenuProvider
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -51,6 +53,8 @@ class SignInFragment : BaseFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
+
         return FragmentSignInBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = this@SignInFragment.viewModel
@@ -83,6 +87,8 @@ class SignInFragment : BaseFragment(
                 it.onSuccess { data ->
                     lifecycleScope.launch(IO) {
                         requireContext().userDatastore.edit { userDatastore ->
+                            userDatastore[PreferenceKeys.USER.EMAIL] = viewModel.email.value!!
+                            userDatastore[PreferenceKeys.USER.PASSWORD] = viewModel.password.value!!
                             userDatastore[PreferenceKeys.USER.TOKEN] = data.data.token
                         }
                     }
@@ -109,5 +115,22 @@ class SignInFragment : BaseFragment(
 
     override fun onStart() {
         super.onStart()
+    }
+
+    override fun getMenuProvider(): MenuProvider {
+        return object : DefaultMenuProvider(
+            menuRes = R.menu.menu_frgament_sign_in_toolbar
+        ) {
+            override fun onMenuItemClick(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.menu_action_navigate_register -> {
+                        findNavController().navigate(R.id.action_signInFragment_to_registerFragment)
+                    }
+                    else -> {}
+                }
+
+                return true
+            }
+        }
     }
 }

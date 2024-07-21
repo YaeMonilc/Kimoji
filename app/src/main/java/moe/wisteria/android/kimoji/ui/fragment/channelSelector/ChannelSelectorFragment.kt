@@ -49,6 +49,8 @@ class ChannelSelectorFragment : BaseFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
+
         return FragmentChannelSelectorBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = this@ChannelSelectorFragment.viewModel
