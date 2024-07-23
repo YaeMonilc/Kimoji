@@ -13,12 +13,9 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import moe.wisteria.android.kimoji.R
 import moe.wisteria.android.kimoji.databinding.FragmentSplashBinding
 import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onException
 import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onSuccess
-import moe.wisteria.android.kimoji.ui.fragment.channelSelector.ChannelSelectorFragment
-import moe.wisteria.android.kimoji.ui.fragment.channelSelector.ChannelSelectorFragmentDirections
 import moe.wisteria.android.kimoji.ui.view.BaseFragment
 import moe.wisteria.android.kimoji.util.MAIN
 import moe.wisteria.android.kimoji.util.PreferenceKeys
