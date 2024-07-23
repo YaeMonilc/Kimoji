@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.MenuProvider
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -27,21 +28,13 @@ class ChannelSelectorFragment : BaseFragment(
     private lateinit var binding: FragmentChannelSelectorBinding
     private val viewModel: ChannelSelectorModel by viewModels()
 
-    companion object {
-        const val NAVIGATION_PARAM_NAVIGATE_POSITION = "NAVIGATION_PARAM_NAVIGATE_POSITION"
+    enum class NavigatePosition {
+        SIGN_IN,
+        BACK;
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel.let { model ->
-
-            arguments?.getInt(NAVIGATION_PARAM_NAVIGATE_POSITION)?.let {
-                model.setNavigatePosition(
-                    navigatePosition = ChannelSelectorModel.NavigatePosition.getByValue(it)
-                )
-            }
-        }
     }
 
     override fun onCreateView(
@@ -50,6 +43,14 @@ class ChannelSelectorFragment : BaseFragment(
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
+
+        viewModel.let { model ->
+            arguments?.let {
+                ChannelSelectorFragmentArgs.fromBundle(it).navigatePosition.let { navigatePosition ->
+                    model.setNavigatePosition(navigatePosition)
+                }
+            }
+        }
 
         return FragmentChannelSelectorBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
@@ -87,7 +88,7 @@ class ChannelSelectorFragment : BaseFragment(
             }
 
             viewModel.navigatePosition.observe(viewLifecycleOwner) {
-                setDisplayHomeAsUp(it == ChannelSelectorModel.NavigatePosition.BACK)
+                setDisplayHomeAsUp(it == NavigatePosition.BACK)
             }
         }
     }
@@ -109,9 +110,16 @@ class ChannelSelectorFragment : BaseFragment(
 
         findNavController().let { navController ->
             when (viewModel.navigatePosition.value!!) {
-                ChannelSelectorModel.NavigatePosition.SIGN_IN -> navController.navigate(R.id.action_channelSelectorFragment_to_signInFragment)
-                ChannelSelectorModel.NavigatePosition.BACK -> navController.popBackStack()
+                NavigatePosition.SIGN_IN -> navController.navigate(ChannelSelectorFragmentDirections.actionChannelSelectorFragmentToSignInFragment())
+                NavigatePosition.BACK -> navController.popBackStack()
             }
+        }
+    }
+
+    override fun getMenuProvider() = object : DefaultMenuProvider() {
+        override fun onHomeAsUpClick(): Boolean {
+            findNavController().popBackStack()
+            return true
         }
     }
 }

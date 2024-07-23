@@ -8,26 +8,13 @@ import moe.wisteria.android.kimoji.network.channelApi
 import moe.wisteria.android.kimoji.util.launchIO
 
 class ChannelSelectorModel : ViewModel() {
-    enum class NavigatePosition {
-        SIGN_IN,
-        BACK;
-
-        companion object {
-            fun getByValue(
-                value: Int
-            ): NavigatePosition? {
-                return entries.firstOrNull() { it.ordinal == value }
-            }
-        }
-    }
-
     private val _indicatorState: MutableLiveData<IndicatorState> = MutableLiveData(IndicatorState.NORMAL)
     val indicatorState: LiveData<IndicatorState> = _indicatorState
 
-    private val _navigatePosition: MutableLiveData<NavigatePosition> = MutableLiveData(
-        NavigatePosition.SIGN_IN
+    private val _navigatePosition: MutableLiveData<ChannelSelectorFragment.NavigatePosition> = MutableLiveData(
+        ChannelSelectorFragment.NavigatePosition.SIGN_IN
     )
-    val navigatePosition: LiveData<NavigatePosition> = _navigatePosition
+    val navigatePosition: LiveData<ChannelSelectorFragment.NavigatePosition> = _navigatePosition
 
     private val _channelList: MutableLiveData<List<String>> = MutableLiveData(listOf())
     val channelList: LiveData<List<String>> = _channelList
@@ -49,7 +36,7 @@ class ChannelSelectorModel : ViewModel() {
     }
 
     fun setNavigatePosition(
-        navigatePosition: NavigatePosition?
+        navigatePosition: ChannelSelectorFragment.NavigatePosition?
     ) {
         navigatePosition?.let {
             _navigatePosition.postValue(it)

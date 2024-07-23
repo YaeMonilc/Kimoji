@@ -43,6 +43,11 @@
         android:name="moe.wisteria.android.kimoji.ui.fragment.channelSelector.ChannelSelectorFragment"
         android:label="ChannelSelectorFragment"
         tools:layout="@layout/fragment_channel_selector">
+        <argument
+            android:name="navigatePosition"
+            app:argType="moe.wisteria.android.kimoji.ui.fragment.channelSelector.ChannelSelectorFragment$NavigatePosition"
+            android:defaultValue="SIGN_IN" />
+
         <action
             android:id="@+id/action_channelSelectorFragment_to_signInFragment"
             app:destination="@id/signInFragment"

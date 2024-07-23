@@ -93,7 +93,7 @@ class SignInFragment : BaseFragment(
                         }
                     }
 
-                    findNavController().navigate(R.id.action_signInFragment_to_indexFragment)
+                    findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToIndexFragment())
                 }.onError { errorResponse ->
                     Snackbar.make(binding.root, getLocalization(errorResponse.message), Snackbar.LENGTH_LONG).show()
                 }.onException { exception ->
@@ -124,7 +124,7 @@ class SignInFragment : BaseFragment(
             override fun onMenuItemClick(menuItem: MenuItem): Boolean {
                 when (menuItem.itemId) {
                     R.id.menu_action_navigate_register -> {
-                        findNavController().navigate(R.id.action_signInFragment_to_registerFragment)
+                        findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToRegisterFragment())
                     }
                     else -> {}
                 }
