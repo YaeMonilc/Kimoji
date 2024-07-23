@@ -16,4 +16,17 @@
     <string name="network_unknown_response">Unknown response!</string>
     <string name="menu_action_navigate_register">Navigate register</string>
     <string name="fragment_register_title">Register</string>
+    <string name="fragment_register_email">Email</string>
+    <string name="fragment_register_name">Name</string>
+    <string name="fragment_register_password">Password</string>
+    <string name="fragment_register_question">Question</string>
+    <string name="fragment_register_answer">Answer</string>
+    <string name="fragment_register_birthday">Birthday</string>
+    <string name="fragment_register_gender_man">Man</string>
+    <string name="fragment_register_gender_woman">Woman</string>
+    <string name="fragment_register_gender_other">Other</string>
+    <string name="fragment_register_gender">Gender</string>
+    <string name="fragment_register_safe">Safe</string>
+    <string name="fragment_register_basic">Basic</string>
+    <string name="fragment_register_ok">OK</string>
 </resources>
