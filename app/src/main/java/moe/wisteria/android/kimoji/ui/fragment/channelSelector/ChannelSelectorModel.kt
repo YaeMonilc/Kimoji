@@ -36,14 +36,14 @@ class ChannelSelectorModel : ViewModel() {
         _indicatorState.postValue(IndicatorState.LOADING)
 
         launchIO {
-            channelApi.init().addresses.let {
-                try {
+            try {
+                channelApi.init().addresses.let {
                     _channelList.postValue(it)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                } finally {
-                    _indicatorState.postValue(IndicatorState.NORMAL)
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _indicatorState.postValue(IndicatorState.NORMAL)
             }
         }
     }
