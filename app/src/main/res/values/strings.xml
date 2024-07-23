@@ -29,4 +29,9 @@
     <string name="fragment_register_safe">Safe</string>
     <string name="fragment_register_basic">Basic</string>
     <string name="fragment_register_ok">OK</string>
+    <string name="activity_fatal_exception_catch_title">Fatal exception</string>
+    <string name="activity_fatal_exception_catch_notice">Oops, the application crashed!</string>
+    <string name="activity_fatal_exception_catch_copy">Copy</string>
+    <string name="activity_fatal_exception_catch_restart">Restart</string>
+    <string name="activity_fatal_exception_catch_copy_complete">Cpoy complete!</string>
 </resources>
