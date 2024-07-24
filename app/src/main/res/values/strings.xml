@@ -33,7 +33,7 @@
     <string name="activity_fatal_exception_catch_notice">Oops, the application crashed!</string>
     <string name="activity_fatal_exception_catch_copy">Copy</string>
     <string name="activity_fatal_exception_catch_restart">Restart</string>
-    <string name="activity_fatal_exception_catch_copy_complete">Cpoy complete!</string>
+    <string name="activity_fatal_exception_catch_copy_complete">Copy complete!</string>
     <string name="network_validation_error">Validation error!</string>
     <string name="view_textInput_layout_error_require_adult">Require adult!</string>
     <string name="fragment_register_birthday_tip">Require adult</string>
