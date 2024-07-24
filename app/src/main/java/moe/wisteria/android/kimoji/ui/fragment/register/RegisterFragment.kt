@@ -6,14 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import moe.wisteria.android.kimoji.R
 import moe.wisteria.android.kimoji.databinding.FragmentRegisterBinding
+import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onError
+import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onException
+import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onSuccess
 import moe.wisteria.android.kimoji.ui.view.BaseFragment
 import moe.wisteria.android.kimoji.util.TextInputLayoutControllerList
+import moe.wisteria.android.kimoji.util.getLocalization
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 class RegisterFragment : BaseFragment(
     toolBarOption = ToolBarOption(
@@ -28,6 +36,9 @@ class RegisterFragment : BaseFragment(
 
     companion object {
         const val DATE_FORMAT = "yyyy-MM-dd"
+        const val GET_REGISTER_RESULT = "GET_REGISTER_RESULT"
+        const val GET_REGISTER_RESULT_EMAIL = "GET_REGISTER_RESULT_EMAIL"
+        const val GET_REGISTER_RESULT_PASSWORD = "GET_REGISTER_RESULT_PASSWORD"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,13 +68,53 @@ class RegisterFragment : BaseFragment(
         ).apply {
             addTextInputLayout(binding.fragmentRegisterEmail)
             addTextInputLayout(binding.fragmentRegisterName)
-            addTextInputLayout(binding.fragmentRegisterPassword)
-            addTextInputLayout(binding.fragmentRegisterBirthday)
+            addTextInputLayout(
+                textInputLayout = binding.fragmentRegisterPassword,
+                conditionMap = mapOf(
+                    R.string.fragment_sign_in_password_tip to {
+                        (it?.length ?: 0) < 8
+                    }
+                )
+            )
+            addTextInputLayout(
+                textInputLayout = binding.fragmentRegisterBirthday,
+                conditionMap = mapOf(
+                    R.string.view_textInput_layout_error_require_adult to {
+                        it?.let { dateStr ->
+                            SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
+                                .parse(dateStr)?.time?.let { selectTime ->
+                                    Calendar.getInstance(Locale.getDefault()).apply {
+                                        time = Date(selectTime)
+                                    }.time > Calendar.getInstance(Locale.getDefault()).apply {
+                                        add(Calendar.YEAR, -18)
+                                    }.time
+                                }
+                        } == true
+                    }
+                )
+            )
             addTextInputLayout(binding.fragmentRegisterQuestion)
             addTextInputLayout(binding.fragmentRegisterAnswer)
         }
 
         viewModel.let { viewModel ->
+            viewModel.registerResponse.observe(viewLifecycleOwner) {
+                it.onSuccess {
+                    setFragmentResult(GET_REGISTER_RESULT, Bundle().apply {
+                        putString(GET_REGISTER_RESULT_EMAIL, viewModel.email.value)
+                        putString(GET_REGISTER_RESULT_PASSWORD, viewModel.password.value)
+                    })
+
+                    findNavController().popBackStack()
+                }.onError { error ->
+                    showSnackBar(getLocalization(error.message))
+                }.onException { exception ->
+                    exception.message?.let { message ->
+                        showSnackBar(message)
+                    }
+                }
+            }
+
             binding.fragmentRegisterBirthday.setEndIconOnClickListener {
                 MaterialDatePicker.Builder.datePicker().build().apply {
                     addOnPositiveButtonClickListener {
@@ -81,6 +132,14 @@ class RegisterFragment : BaseFragment(
                         else -> RegisterModel.Gender.MAN
                     }.realValue
                 )
+            }
+
+            binding.fragmentRegisterOk.setOnClickListener {
+                if (!textInputLayoutControllerList.checkAll()) {
+                    return@setOnClickListener
+                }
+
+                viewModel.register()
             }
         }
     }
