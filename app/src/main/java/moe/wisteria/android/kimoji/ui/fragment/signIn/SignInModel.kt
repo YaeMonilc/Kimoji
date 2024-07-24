@@ -13,7 +13,8 @@ import moe.wisteria.android.kimoji.util.launchIO
 class SignInModel : ViewModel() {
 
     private val _indicatorState: MutableLiveData<IndicatorState> = MutableLiveData(IndicatorState.NORMAL)
-    val indicatorState: LiveData<IndicatorState> = _indicatorState
+    val indicatorState: LiveData<IndicatorState>
+        get() = _indicatorState
 
     private val _signInResponse: MutableLiveData<PicaResponse<PicaResponse.SignInResponse>> = MutableLiveData()
     val signInResponse: LiveData<PicaResponse<PicaResponse.SignInResponse>>

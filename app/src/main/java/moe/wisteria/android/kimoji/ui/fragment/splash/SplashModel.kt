@@ -16,7 +16,8 @@ import moe.wisteria.android.kimoji.util.launchIO
 
 class SplashModel : ViewModel() {
     private val _navigatePosition: MutableLiveData<NavDirections> = MutableLiveData()
-    val navigatePosition: LiveData<NavDirections> = _navigatePosition
+    val navigatePosition: LiveData<NavDirections>
+        get() = _navigatePosition
 
     private val _signInResponse: MutableLiveData<PicaResponse<PicaResponse.SignInResponse>> = MutableLiveData()
     val signInResponse: LiveData<PicaResponse<PicaResponse.SignInResponse>>
