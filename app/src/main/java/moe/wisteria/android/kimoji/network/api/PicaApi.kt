@@ -1,5 +1,6 @@
 package moe.wisteria.android.kimoji.network.api
 
+import moe.wisteria.android.kimoji.network.entity.body.RegisterBody
 import moe.wisteria.android.kimoji.network.entity.body.SignInBody
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -11,5 +12,11 @@ interface PicaApi {
     fun signIn(
         @Body
         body: SignInBody
+    ): Call<ResponseBody>
+
+    @POST("/auth/register")
+    fun register(
+        @Body
+        body: RegisterBody
     ): Call<ResponseBody>
 }
