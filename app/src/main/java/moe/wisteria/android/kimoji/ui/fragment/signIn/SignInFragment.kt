@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.MenuProvider
 import androidx.datastore.preferences.core.edit
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,6 +17,7 @@ import moe.wisteria.android.kimoji.databinding.FragmentSignInBinding
 import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onError
 import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onException
 import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onSuccess
+import moe.wisteria.android.kimoji.ui.fragment.register.RegisterFragment
 import moe.wisteria.android.kimoji.ui.view.BaseFragment
 import moe.wisteria.android.kimoji.util.IO
 import moe.wisteria.android.kimoji.util.PreferenceKeys
@@ -82,6 +84,11 @@ class SignInFragment : BaseFragment(
         }
 
         viewModel.let { viewModel ->
+            setFragmentResultListener(RegisterFragment.GET_REGISTER_RESULT) { _, bundle ->
+                viewModel.setEmail(bundle.getString(RegisterFragment.GET_REGISTER_RESULT_EMAIL))
+                viewModel.setPassword(bundle.getString(RegisterFragment.GET_REGISTER_RESULT_PASSWORD))
+            }
+
             viewModel.signInResponse.observe(viewLifecycleOwner) {
                 it.onSuccess { data ->
                     lifecycleScope.launch(IO) {
