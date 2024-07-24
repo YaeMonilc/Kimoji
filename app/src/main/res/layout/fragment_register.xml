@@ -105,8 +105,10 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/fragment_register_birthday"
                             android:enabled="@{ viewModel.indicatorState == IndicatorState.NORMAL }"
+                            app:errorIconDrawable="@null"
                             app:endIconDrawable="@drawable/baseline_date_range_24"
-                            app:endIconMode="custom">
+                            app:endIconMode="custom"
+                            app:helperText="@string/fragment_register_birthday_tip">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
