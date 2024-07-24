@@ -10,7 +10,6 @@ import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import moe.wisteria.android.kimoji.R
 import moe.wisteria.android.kimoji.databinding.FragmentSignInBinding
@@ -94,11 +93,11 @@ class SignInFragment : BaseFragment(
                     }
 
                     findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToIndexFragment())
-                }.onError { errorResponse ->
-                    Snackbar.make(binding.root, getLocalization(errorResponse.message), Snackbar.LENGTH_LONG).show()
+                }.onError { error ->
+                    showSnackBar(getLocalization(error.message))
                 }.onException { exception ->
                     exception.message?.let { message ->
-                        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
+                        showSnackBar(message)
                     }
                 }
             }

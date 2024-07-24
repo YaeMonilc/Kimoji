@@ -13,6 +13,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 
 abstract class BaseFragment(
     private val toolBarOption: ToolBarOption = ToolBarOption()
@@ -90,9 +91,28 @@ abstract class BaseFragment(
 
     open fun getMenuProvider(): MenuProvider = DefaultMenuProvider()
 
-    fun setDisplayHomeAsUp(
+    internal fun setDisplayHomeAsUp(
         enabled: Boolean
     ) {
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(enabled)
+    }
+
+    internal fun showSnackBar(
+        @StringRes
+        message: Int,
+        length: Int = Snackbar.LENGTH_SHORT
+    ) {
+        requireActivity().findViewById<View>(android.R.id.content).also {
+            Snackbar.make(it, message, length).show()
+        }
+    }
+
+    internal fun showSnackBar(
+        message: String,
+        length: Int = Snackbar.LENGTH_SHORT
+    ) {
+        requireActivity().findViewById<View>(android.R.id.content).also {
+            Snackbar.make(it, message, length).show()
+        }
     }
 }
