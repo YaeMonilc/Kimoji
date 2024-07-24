@@ -11,7 +11,7 @@
     <string name="fragment_sign_in_password">Password</string>
     <string name="fragment_sign_in_password_tip">Require more than 8 word</string>
     <string name="fragment_sign_in_ok">OK</string>
-    <string name="view_textInput_layout_error_not_be_empty">Require not empty</string>
+    <string name="view_textInput_layout_error_not_be_empty">Require not empty!</string>
     <string name="network_invalid_email_or_password">Invalid email or password!</string>
     <string name="network_unknown_response">Unknown response!</string>
     <string name="menu_action_navigate_register">Navigate register</string>
@@ -34,4 +34,8 @@
     <string name="activity_fatal_exception_catch_copy">Copy</string>
     <string name="activity_fatal_exception_catch_restart">Restart</string>
     <string name="activity_fatal_exception_catch_copy_complete">Cpoy complete!</string>
+    <string name="network_validation_error">Validation error!</string>
+    <string name="view_textInput_layout_error_require_adult">Require adult!</string>
+    <string name="fragment_register_birthday_tip">Require adult</string>
+    <string name="network_email_is_already_exist">Email is already exist!</string>
 </resources>
