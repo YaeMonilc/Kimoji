@@ -30,6 +30,7 @@ class Kimoji : Application() {
                 putExtra(FatalExceptionCatchActivity.EXTRA_EXCEPTION, throwable.stackTraceToString())
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             })
+            throwable.printStackTrace()
             exitProcess(0)
         }
     }
