@@ -84,10 +84,23 @@
         android:id="@+id/indexFragment"
         android:name="moe.wisteria.android.kimoji.ui.fragment.index.IndexFragment"
         android:label="IndexFragment"
-        tools:layout="@layout/fragment_index"/>
+        tools:layout="@layout/fragment_index">
+        <action
+            android:id="@+id/action_indexFragment_to_searchFragment"
+            app:destination="@id/searchFragment"
+            app:enterAnim="@anim/anim_navigation_default_enter"
+            app:exitAnim="@anim/anim_navigation_default_exit"
+            app:popEnterAnim="@anim/anim_navigation_default_pop_enter"
+            app:popExitAnim="@anim/anim_navigation_default_pop_exit"/>
+    </fragment>
     <fragment
         android:id="@+id/registerFragment"
         android:name="moe.wisteria.android.kimoji.ui.fragment.register.RegisterFragment"
         android:label="RegisterFragment"
         tools:layout="@layout/fragment_register"/>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="moe.wisteria.android.kimoji.ui.fragment.search.SearchFragment"
+        android:label="SearchFragment"
+        tools:layout="@layout/fragment_search"/>
 </navigation>
