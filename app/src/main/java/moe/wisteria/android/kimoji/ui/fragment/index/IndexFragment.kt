@@ -5,12 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
 import moe.wisteria.android.kimoji.databinding.FragmentIndexBinding
 import moe.wisteria.android.kimoji.ui.view.BaseFragment
 
 class IndexFragment : BaseFragment(
     toolBarOption = ToolBarOption(
-        title = null
+        title = null,
+        display = false
     )
 ) {
     private lateinit var binding: FragmentIndexBinding
@@ -38,5 +41,10 @@ class IndexFragment : BaseFragment(
 
     override fun onStart() {
         super.onStart()
+
+        NavigationUI.setupWithNavController(
+            navigationBarView = binding.fragmentIndexBottomNavigation,
+            navController = Navigation.findNavController(binding.fragmentIndexFragmentContainer)
+        )
     }
 }

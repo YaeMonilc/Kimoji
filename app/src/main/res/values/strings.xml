@@ -38,4 +38,9 @@
     <string name="view_textInput_layout_error_require_adult">Require adult!</string>
     <string name="fragment_register_birthday_tip">Require adult</string>
     <string name="network_email_is_already_exist">Email is already exist!</string>
+    <string name="fragment_profile_title">Profile</string>
+    <string name="fragment_category_title">Category</string>
+    <string name="menu_item_homeFragment">Home</string>
+    <string name="menu_item_categoryFragment">Category</string>
+    <string name="menu_item_profileFragment">Profile</string>
 </resources>
