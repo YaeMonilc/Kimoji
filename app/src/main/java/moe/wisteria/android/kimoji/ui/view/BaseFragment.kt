@@ -100,19 +100,17 @@ abstract class BaseFragment(
     internal fun showSnackBar(
         @StringRes
         message: Int,
+        view: View? = null,
         length: Int = Snackbar.LENGTH_SHORT
     ) {
-        requireActivity().findViewById<View>(android.R.id.content).also {
-            Snackbar.make(it, message, length).show()
-        }
+        Snackbar.make(view ?: requireActivity().findViewById(android.R.id.content), message, length).show()
     }
 
     internal fun showSnackBar(
         message: String,
+        view: View? = null,
         length: Int = Snackbar.LENGTH_SHORT
     ) {
-        requireActivity().findViewById<View>(android.R.id.content).also {
-            Snackbar.make(it, message, length).show()
-        }
+        Snackbar.make(view ?: requireActivity().findViewById(android.R.id.content), message, length).show()
     }
 }
