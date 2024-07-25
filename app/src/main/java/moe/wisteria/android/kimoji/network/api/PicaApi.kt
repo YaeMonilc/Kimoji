@@ -5,6 +5,8 @@ import moe.wisteria.android.kimoji.network.entity.body.SignInBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface PicaApi {
@@ -18,5 +20,11 @@ interface PicaApi {
     fun register(
         @Body
         body: RegisterBody
+    ): Call<ResponseBody>
+
+    @GET("/comics/random")
+    fun randomComic(
+        @Header("authorization")
+        token: String
     ): Call<ResponseBody>
 }

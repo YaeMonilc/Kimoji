@@ -1,5 +1,6 @@
 package moe.wisteria.android.kimoji.network.entity.response
 
+import moe.wisteria.android.kimoji.entity.BaseComic
 import java.lang.Exception
 
 data class PicaResponse<T>(
@@ -60,6 +61,19 @@ data class PicaResponse<T>(
     ) {
         data class Data(
             val token: String
+        )
+    }
+
+    class RandomComics(
+        code: Int,
+        message: String,
+        val data: Data
+    ) : BaseResponse(
+        code = code,
+        message = message
+    ) {
+        data class Data(
+            val comics: List<BaseComic>
         )
     }
 }
