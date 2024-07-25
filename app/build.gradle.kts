@@ -61,6 +61,10 @@ dependencies {
     implementation(libs.androidx.navigation.fragment)
     // https://mvnrepository.com/artifact/androidx.navigation/navigation-ui-ktx
     implementation(libs.androidx.navigation.ui.ktx)
+    // https://mvnrepository.com/artifact/androidx.recyclerview/recyclerview
+    implementation(libs.recyclerview)
+    // https://mvnrepository.com/artifact/com.google.android.flexbox/flexbox
+    implementation(libs.flexbox)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
