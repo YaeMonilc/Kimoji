@@ -12,6 +12,12 @@ import moe.wisteria.android.kimoji.util.launchIO
 import kotlin.system.exitProcess
 
 class Kimoji : Application() {
+    companion object {
+        object Dir {
+            const val COIL_CACHE = "coil_cache"
+        }
+    }
+
     override fun onCreate() {
         super.onCreate()
 
