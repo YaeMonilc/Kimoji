@@ -40,12 +40,12 @@ class HomeFragment : BaseFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return view ?: FragmentHomeBinding.inflate(inflater, container, false).apply {
-            lifecycleOwner = viewLifecycleOwner
-        }.also {
+        return (view ?: FragmentHomeBinding.inflate(inflater, container, false).also {
             binding = it
-            view = it.root
-        }.root
+            view = binding.root
+        }.root).also {
+            binding.lifecycleOwner = viewLifecycleOwner
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,7 +69,6 @@ class HomeFragment : BaseFragment(
                     stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
                 }
                 layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false).apply {
-                    setHasFixedSize(true)
                     setItemViewCacheSize(50)
                 }
             }
