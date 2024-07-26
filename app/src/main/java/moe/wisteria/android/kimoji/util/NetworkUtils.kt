@@ -1,7 +1,12 @@
 package moe.wisteria.android.kimoji.util
 
 import android.content.Context
+import android.widget.ImageView
 import coil.ImageLoader
+import coil.disk.DiskCache
+import coil.load
+import coil.memory.MemoryCache
+import moe.wisteria.android.kimoji.Kimoji
 import moe.wisteria.android.kimoji.network.defaultOkHttpClient
 import moe.wisteria.android.kimoji.network.entity.response.PicaResponse
 import okhttp3.Request
@@ -84,4 +89,29 @@ suspend inline fun <reified T> Call<ResponseBody>.executeForPica(): PicaResponse
 val Context.imageLoader: ImageLoader
     get() = ImageLoader(this).newBuilder().apply {
         okHttpClient { defaultOkHttpClient }
+        memoryCache {
+            MemoryCache.Builder(this@imageLoader).apply {
+                maxSizePercent(0.3)
+                weakReferencesEnabled(true)
+                strongReferencesEnabled(true)
+                maxSizeBytes(1024 * 1024 * 10)
+            }.build()
+        }
+        diskCache {
+            DiskCache.Builder().apply {
+                directory(this@imageLoader.cacheDir.resolve(Kimoji.Companion.Dir.COIL_CACHE))
+                maxSizePercent(0.1)
+                maxSizeBytes(1024 * 1024 * 10)
+                cleanupDispatcher(IO)
+            }.build()
+        }
     }.build()
+
+fun ImageView.loadImage(
+    data: Any
+) {
+    load(
+        data = data,
+        imageLoader = context.imageLoader
+    )
+}
