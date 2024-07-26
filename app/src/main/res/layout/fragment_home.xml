@@ -51,7 +51,7 @@
                 android:id="@+id/fragment_home_search_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/fragment_home_search_bar" />
+                android:hint="@string/fragment_home_search_bar_tint" />
         </com.google.android.material.appbar.AppBarLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

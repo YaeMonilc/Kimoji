@@ -44,5 +44,5 @@
     <string name="menu_item_homeFragment">主页</string>
     <string name="menu_item_categoryFragment">分类</string>
     <string name="menu_item_profileFragment">档案</string>
-    <string name="fragment_home_search_bar">输点什么</string>
+    <string name="fragment_home_search_bar_tint">搜点什么？</string>
 </resources>
