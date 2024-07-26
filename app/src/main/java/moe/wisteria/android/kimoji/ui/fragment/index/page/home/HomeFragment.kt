@@ -25,6 +25,7 @@ class HomeFragment : BaseFragment(
         display = false
     )
 ) {
+    private var view: View? = null
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeModel by viewModels()
 
@@ -39,10 +40,11 @@ class HomeFragment : BaseFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return FragmentHomeBinding.inflate(inflater, container, false).apply {
+        return view ?: FragmentHomeBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
         }.also {
             binding = it
+            view = it.root
         }.root
     }
 
@@ -62,11 +64,12 @@ class HomeFragment : BaseFragment(
                     itemOnClickListener = {
                         showSnackBar(it.author, binding.fragmentHomeComicList)
                     },
-                    comicList = listOf()
+                    comicList = viewModel.comicList.value ?: listOf()
                 ).apply {
                     stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
                 }
                 layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false).apply {
+                    setHasFixedSize(true)
                     setItemViewCacheSize(50)
                 }
             }
