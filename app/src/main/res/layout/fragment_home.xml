@@ -24,15 +24,11 @@
                 android:id="@+id/fragment_home_nested_scroll_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/fragment_home_comic_list"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/fragment_home_comic_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        tools:listitem="@layout/item_column_comic"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:layout_height="match_parent"
+                    tools:listitem="@layout/item_column_comic"/>
             </androidx.core.widget.NestedScrollView>
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
