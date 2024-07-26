@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.NestedScrollView
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import moe.wisteria.android.kimoji.R
 import moe.wisteria.android.kimoji.databinding.FragmentHomeBinding
+import moe.wisteria.android.kimoji.entity.IndicatorState
 import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onError
 import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onException
 import moe.wisteria.android.kimoji.ui.adapter.ColumnComicAdapter
@@ -69,10 +71,17 @@ class HomeFragment : BaseFragment(
                 ).apply {
                     stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
                 }
-                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false).apply {
-                    setItemViewCacheSize(50)
-                }
+                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+                setItemViewCacheSize(50)
             }
+
+            binding.fragmentHomeNestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
+                if (v.computeVerticalScrollOffset() > 0 &&!v.canScrollVertically(1)
+                    && viewModel.indicatorState.value != IndicatorState.LOADING) {
+                    loadRandomComics()
+                }
+            })
 
             viewModel.randomComicsResponse.observe(viewLifecycleOwner) {
                 it.onError { errorResponse ->
