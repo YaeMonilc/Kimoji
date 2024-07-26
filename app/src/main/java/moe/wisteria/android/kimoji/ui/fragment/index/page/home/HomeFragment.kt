@@ -45,6 +45,7 @@ class HomeFragment : BaseFragment(
             view = binding.root
         }.root).also {
             binding.lifecycleOwner = viewLifecycleOwner
+            binding.viewModel = viewModel
         }
     }
 
