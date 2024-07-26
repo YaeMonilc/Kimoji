@@ -1,5 +1,7 @@
 package moe.wisteria.android.kimoji.util
 
+import android.content.Context
+import coil.ImageLoader
 import moe.wisteria.android.kimoji.network.defaultOkHttpClient
 import moe.wisteria.android.kimoji.network.entity.response.PicaResponse
 import okhttp3.Request
@@ -78,3 +80,8 @@ suspend inline fun <reified T> Call<ResponseBody>.executeForPica(): PicaResponse
 
     return PicaResponse()
 }
+
+val Context.imageLoader: ImageLoader
+    get() = ImageLoader(this).newBuilder().apply {
+        okHttpClient { defaultOkHttpClient }
+    }.build()

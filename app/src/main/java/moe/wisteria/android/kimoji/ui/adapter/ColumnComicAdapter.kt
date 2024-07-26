@@ -4,9 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.google.android.flexbox.FlexboxLayoutManager
 import moe.wisteria.android.kimoji.databinding.ItemColumnComicBinding
 import moe.wisteria.android.kimoji.entity.BaseComic
+import moe.wisteria.android.kimoji.util.imageLoader
 
 class ColumnComicAdapter(
     private val context: Context,
@@ -16,16 +18,25 @@ class ColumnComicAdapter(
     private val _comicList: MutableList<BaseComic> = comicList.toMutableList()
 
     class ViewHolder(
+        private val context: Context,
         private val binding: ItemColumnComicBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(
             baseComic: BaseComic,
             itemOnClickListener: ((BaseComic) -> Unit) = { }
         ) {
-            binding.itemColumnComicTitle.text = baseComic.title
             binding.itemColumnComicCard.setOnClickListener {
                 itemOnClickListener(baseComic)
             }
+            binding.itemColumnComicTitle.text = baseComic.title
+
+            baseComic.thumb.let {
+                binding.itemColumnComicThumb.load(
+                    data = "${ it.fileServer }/static/${ it.path }",
+                    imageLoader = context.imageLoader
+                )
+            }
+
             binding.itemColumnComicCategory.apply {
                 adapter = LabelAdapter(
                     context = context,
@@ -38,6 +49,7 @@ class ColumnComicAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
+            context = context,
             binding = ItemColumnComicBinding.inflate(LayoutInflater.from(context), parent, false)
         )
     }
