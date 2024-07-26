@@ -73,4 +73,18 @@ class ColumnComicAdapter(
             insertComic(baseComic)
         }
     }
+
+    fun removeComic(
+        position: Int
+    ) {
+        _comicList.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    fun removeAll() {
+        _comicList.size.let { originSize ->
+            _comicList.clear()
+            notifyItemRangeRemoved(0, originSize)
+        }
+    }
 }
