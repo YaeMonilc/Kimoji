@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <com.google.android.material.card.MaterialCardView
+        style="@style/ShapeAppearance.Material3.Corner.Full"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="2dp">
