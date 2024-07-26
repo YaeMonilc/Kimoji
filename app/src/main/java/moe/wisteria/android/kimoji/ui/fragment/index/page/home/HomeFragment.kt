@@ -66,7 +66,9 @@ class HomeFragment : BaseFragment(
                 ).apply {
                     stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
                 }
-                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false).apply {
+                    setItemViewCacheSize(50)
+                }
             }
 
             viewModel.randomComicsResponse.observe(viewLifecycleOwner) {
