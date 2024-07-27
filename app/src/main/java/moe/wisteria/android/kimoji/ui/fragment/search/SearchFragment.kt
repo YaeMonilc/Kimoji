@@ -1,18 +1,18 @@
 package moe.wisteria.android.kimoji.ui.fragment.search
 
+import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import moe.wisteria.android.kimoji.databinding.FragmentSearchBinding
 import moe.wisteria.android.kimoji.entity.SearchState
 import moe.wisteria.android.kimoji.ui.adapter.ColumnComicAdapter
@@ -55,58 +55,57 @@ class SearchFragment : BaseFragment(
                     findNavController().popBackStack()
                 }
                 show()
-            }
 
-            binding.fragmentSearchSearchView.editText.addTextChangedListener(object : TextWatcher {
-                private var time: Long = System.currentTimeMillis()
-                private var job: Job? = null
-
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (p0?.isNotBlank() == true) {
-                        if (job != null && time + 10000 >= System.currentTimeMillis()) {
-                            job?.cancel()
-                        }
-
-                        job = launchIO {
-                            time = System.currentTimeMillis()
-                            viewModel.setSearchContent(p0.toString())
-
-                            delay(300)
+                editText.apply {
+                    setOnEditorActionListener { _, i, _ ->
+                        if (i == EditorInfo.IME_ACTION_SEARCH) {
+                            viewModel.setSearchContent(text.toString())
                             viewModel.prepareReSearch()
                             search()
+
+                            (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+                                .hideSoftInputFromWindow(windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+
+                            return@setOnEditorActionListener true
                         }
-                    } else {
-                        viewModel.prepareReSearch()
+                        false
                     }
                 }
-
-                override fun afterTextChanged(p0: Editable?) {}
-            })
-        }
-
-        binding.fragmentSearchComicList.apply {
-            adapter = ColumnComicAdapter(
-                context = requireContext(),
-                itemOnClickListener = {
-
-                },
-                comicList = viewModel.searchState.value?.comics ?: listOf()
-            ).apply {
-                stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             }
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-            setItemViewCacheSize(50)
-        }
+            binding.fragmentSearchComicList.apply {
+                adapter = ColumnComicAdapter(
+                    context = requireContext(),
+                    itemOnClickListener = {
 
-        viewModel.searchState.observe(viewLifecycleOwner) {
-            (binding.fragmentSearchComicList.adapter as ColumnComicAdapter).let { columnComicAdapter ->
-                when (it.state) {
-                    SearchState.State.WAIT -> columnComicAdapter.removeAll()
-                    SearchState.State.SUCCESS -> columnComicAdapter.insertComics(*it.comics.toTypedArray())
-                    else -> {}
+                    },
+                    comicList = viewModel.searchState.value?.comics ?: listOf()
+                ).apply {
+                    stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+                }
+                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+                addOnScrollListener(object : OnScrollListener() {
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        super.onScrolled(recyclerView, dx, dy)
+
+                        if (recyclerView.computeVerticalScrollOffset() > 0 &&!recyclerView.canScrollVertically(1)
+                            && viewModel.searchState.value?.state != SearchState.State.LOADING) {
+                            search()
+                        }
+                    }
+                })
+
+                setItemViewCacheSize(50)
+            }
+
+            viewModel.searchState.observe(viewLifecycleOwner) {
+                (binding.fragmentSearchComicList.adapter as ColumnComicAdapter).let { columnComicAdapter ->
+                    when (it.state) {
+                        SearchState.State.WAIT -> columnComicAdapter.removeAll()
+                        SearchState.State.SUCCESS -> columnComicAdapter.insertComics(*it.comics.toTypedArray())
+                        else -> {}
+                    }
                 }
             }
         }

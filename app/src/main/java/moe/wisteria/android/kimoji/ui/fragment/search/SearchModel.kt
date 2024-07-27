@@ -22,7 +22,7 @@ class SearchModel : ViewModel() {
 
     private val _searchContent: MutableLiveData<String> = MutableLiveData("")
 
-    private object Pager {
+    private object PageController {
         var currentPage: Int = 0
         var totalPage: Int = 0
 
@@ -31,7 +31,15 @@ class SearchModel : ViewModel() {
             totalPage = 0
         }
 
-        fun isReset() = currentPage == 0 && totalPage == 0
+        fun nextPage(): Int = ++currentPage
+
+        fun set(
+            currentPage: Int,
+            totalPage: Int
+        ) {
+            this.currentPage = currentPage
+            this.totalPage = totalPage
+        }
     }
 
     fun search(
@@ -49,7 +57,7 @@ class SearchModel : ViewModel() {
                 body = SearchBody(
                     keyword = _searchContent.value!!
                 ),
-                page = ++Pager.currentPage
+                page = PageController.nextPage()
             ).executeForPica<PicaResponse.ComicList>().also {
                 _searchResponse.postValue(it)
             }.onSuccess {
@@ -61,15 +69,15 @@ class SearchModel : ViewModel() {
                                     SearchState.State.EMPTY
                                 else
                                     SearchState.State.SUCCESS,
-                                comics = originList.plus(comics.docs)
-                        )
+                                comics = comics.docs
+                            )
                         )
                     }
 
-                    if (Pager.isReset()) {
-                        Pager.currentPage = comics.page
-                        Pager.totalPage = comics.pages
-                    }
+                    PageController.set(
+                        currentPage = comics.page,
+                        totalPage = comics.pages
+                    )
                 }
             }
         }
@@ -82,7 +90,8 @@ class SearchModel : ViewModel() {
     }
 
     fun prepareReSearch() {
-        Pager.reset()
+        PageController.reset()
+
         _searchState.postValue(
             _searchState.value!!.copy(
                 state = SearchState.State.WAIT,
