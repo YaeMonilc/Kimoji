@@ -45,4 +45,6 @@
     <string name="menu_item_categoryFragment">分类</string>
     <string name="menu_item_profileFragment">档案</string>
     <string name="fragment_home_search_bar_tint">搜点什么？</string>
+    <string name="fragment_search_empty_tip">没有搜索结果</string>
+    <string name="fragment_search_wait_tip">输入关键字开始搜索</string>
 </resources>

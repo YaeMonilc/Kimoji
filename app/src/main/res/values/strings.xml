@@ -43,5 +43,7 @@
     <string name="menu_item_homeFragment">Home</string>
     <string name="menu_item_categoryFragment">Category</string>
     <string name="menu_item_profileFragment">Profile</string>
-    <string name="fragment_home_search_bar_tint">Search some?</string>
+    <string name="fragment_home_search_bar_tint">Search something?</string>
+    <string name="fragment_search_empty_tip">No result</string>
+    <string name="fragment_search_wait_tip">Type keyword to search</string>
 </resources>
