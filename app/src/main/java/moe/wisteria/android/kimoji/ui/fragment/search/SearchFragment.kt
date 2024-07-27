@@ -15,9 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import moe.wisteria.android.kimoji.databinding.FragmentSearchBinding
 import moe.wisteria.android.kimoji.entity.SearchState
+import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onError
+import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onException
 import moe.wisteria.android.kimoji.ui.adapter.ColumnComicAdapter
 import moe.wisteria.android.kimoji.ui.view.BaseFragment
 import moe.wisteria.android.kimoji.util.PreferenceKeys
+import moe.wisteria.android.kimoji.util.getLocalization
 import moe.wisteria.android.kimoji.util.launchIO
 import moe.wisteria.android.kimoji.util.userDatastore
 
@@ -97,6 +100,14 @@ class SearchFragment : BaseFragment(
                 })
 
                 setItemViewCacheSize(50)
+            }
+
+            viewModel.searchResponse.observe(viewLifecycleOwner) {
+                it.onError { errorResponse ->
+                    showSnackBar(getLocalization(errorResponse.error))
+                }.onException { exception ->
+                    showSnackBar(exception.stackTraceToString())
+                }
             }
 
             viewModel.searchState.observe(viewLifecycleOwner) {
