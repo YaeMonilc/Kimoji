@@ -103,7 +103,7 @@ class SearchFragment : BaseFragment(
                 (binding.fragmentSearchComicList.adapter as ColumnComicAdapter).let { columnComicAdapter ->
                     when (it.state) {
                         SearchState.State.WAIT -> columnComicAdapter.removeAll()
-                        SearchState.State.SUCCESS -> columnComicAdapter.insertComics(*it.comics.toTypedArray())
+                        SearchState.State.SUCCESS -> columnComicAdapter.insertComics(*it.comics.takeLast(20).toTypedArray())
                         else -> {}
                     }
                 }

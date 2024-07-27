@@ -69,7 +69,7 @@ class SearchModel : ViewModel() {
                                     SearchState.State.EMPTY
                                 else
                                     SearchState.State.SUCCESS,
-                                comics = comics.docs
+                                comics = originList.plus(comics.docs)
                             )
                         )
                     }

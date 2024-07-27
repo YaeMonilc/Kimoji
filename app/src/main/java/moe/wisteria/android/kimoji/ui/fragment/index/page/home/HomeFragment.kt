@@ -94,7 +94,9 @@ class HomeFragment : BaseFragment(
             }
 
             viewModel.comicList.observe(viewLifecycleOwner) {
-                (binding.fragmentHomeComicList.adapter as ColumnComicAdapter).insertComics(*it.toTypedArray())
+                (binding.fragmentHomeComicList.adapter as ColumnComicAdapter).insertComics(
+                    *it.takeLast(20).toTypedArray()
+                )
             }
         }
     }
