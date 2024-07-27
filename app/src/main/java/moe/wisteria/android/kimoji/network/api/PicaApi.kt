@@ -37,6 +37,6 @@ interface PicaApi {
         @Body
         body: SearchBody,
         @Query("page")
-        page: Int = 1,
+        page: Int = 1
     ): Call<ResponseBody>
 }
