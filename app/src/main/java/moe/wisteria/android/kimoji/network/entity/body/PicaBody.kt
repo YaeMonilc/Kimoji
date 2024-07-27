@@ -23,5 +23,5 @@ data class RegisterBody(
 
 data class SearchBody(
     val keyword: String,
-    val sort: String = Sort.OLD.toString()
+    val sort: String = Sort.NEW.toString()
 )
