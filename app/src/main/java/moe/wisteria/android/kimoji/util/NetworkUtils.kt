@@ -76,7 +76,7 @@ suspend inline fun <reified T> Call<ResponseBody>.executeForPica(): PicaResponse
                 }
         }
     } catch (e: Exception) {
-        //e.printStackTrace()
+        e.printStackTrace()
         return PicaResponse(
             status = PicaResponse.Status.EXCEPTION,
             exception = e
