@@ -1,11 +1,9 @@
 package moe.wisteria.android.kimoji.ui.fragment.index.page.home
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.NestedScrollView
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
@@ -52,7 +50,6 @@ class HomeFragment : BaseFragment(
         }
     }
 
-    @SuppressLint("RestrictedApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -76,14 +73,18 @@ class HomeFragment : BaseFragment(
                 layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
                 setItemViewCacheSize(50)
-            }
 
-            binding.fragmentHomeNestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
-                if (v.computeVerticalScrollOffset() > 0 &&!v.canScrollVertically(1)
-                    && viewModel.indicatorState.value != IndicatorState.LOADING) {
-                    loadRandomComics()
-                }
-            })
+                addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        super.onScrolled(recyclerView, dx, dy)
+
+                        if (recyclerView.computeVerticalScrollOffset() > 0 &&!recyclerView.canScrollVertically(1)
+                            && viewModel.indicatorState.value != IndicatorState.LOADING) {
+                            loadRandomComics()
+                        }
+                    }
+                })
+            }
 
             viewModel.randomComicsResponse.observe(viewLifecycleOwner) {
                 it.onError { errorResponse ->
