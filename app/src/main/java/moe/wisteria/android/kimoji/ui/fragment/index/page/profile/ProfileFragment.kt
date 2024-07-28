@@ -89,22 +89,6 @@ class ProfileFragment : BaseFragment(
                     showSnackBar(exception.stackTraceToString())
                 }
             }
-
-            viewModel.usersPunchInResponse.observe(viewLifecycleOwner) {
-                it.onSuccess { usersPunchInResponse ->
-                    usersPunchInResponse.data.res.let { result ->
-                        if (result.status == "ok") {
-                            showSnackBar(getString(R.string.network_punch_in_success, result.punchInLastDay))
-                        } else {
-                            showSnackBar(getString(R.string.network_punch_in_failed))
-                        }
-                    }
-                }.onError { errorResponse ->
-                    showSnackBar(getLocalization(errorResponse.error))
-                }.onException { exception ->
-                    showSnackBar(exception.stackTraceToString())
-                }
-            }
         }
     }
 
@@ -124,7 +108,21 @@ class ProfileFragment : BaseFragment(
                                 it[PreferenceKeys.USER.TOKEN]?.let { token ->
                                     viewModel.punchIn(
                                         token = token
-                                    )
+                                    ).collect { response ->
+                                        response.onSuccess { usersPunchIn ->
+                                            usersPunchIn.data.res.let { result ->
+                                                if (result.status == "ok") {
+                                                    showSnackBar(getString(R.string.network_punch_in_success, result.punchInLastDay))
+                                                } else {
+                                                    showSnackBar(getString(R.string.network_punch_in_failed))
+                                                }
+                                            }
+                                        }.onError { errorResponse ->
+                                            showSnackBar(getLocalization(errorResponse.error))
+                                        }.onException { exception ->
+                                            showSnackBar(exception.stackTraceToString())
+                                        }
+                                    }
                                 }
                             }
                         }

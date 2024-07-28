@@ -3,11 +3,15 @@ package moe.wisteria.android.kimoji.ui.fragment.index.page.profile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.launch
 import moe.wisteria.android.kimoji.entity.IndicatorState
 import moe.wisteria.android.kimoji.entity.Profile
 import moe.wisteria.android.kimoji.network.entity.response.PicaResponse
 import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onSuccess
 import moe.wisteria.android.kimoji.network.picaApi
+import moe.wisteria.android.kimoji.util.IO
 import moe.wisteria.android.kimoji.util.executeForPica
 import moe.wisteria.android.kimoji.util.launchIO
 
@@ -20,10 +24,6 @@ class ProfileModel : ViewModel() {
     private val _usersProfileResponse: MutableLiveData<PicaResponse<PicaResponse.UsersProfile>> = MutableLiveData()
     val usersProfileResponse: LiveData<PicaResponse<PicaResponse.UsersProfile>>
         get() = _usersProfileResponse
-
-    private val _usersPunchInResponse: MutableLiveData<PicaResponse<PicaResponse.UsersPunchIn>> = MutableLiveData()
-    val usersPunchInResponse: LiveData<PicaResponse<PicaResponse.UsersPunchIn>>
-        get() = _usersPunchInResponse
 
     private val _profile: MutableLiveData<Profile> = MutableLiveData()
     val profile: LiveData<Profile>
@@ -48,12 +48,12 @@ class ProfileModel : ViewModel() {
 
     fun punchIn(
         token: String
-    ) {
-        launchIO {
+    ): Flow<PicaResponse<PicaResponse.UsersPunchIn>> = channelFlow {
+        launch(IO) {
             picaApi.usersPunchIn(
                 token = token
             ).executeForPica<PicaResponse.UsersPunchIn>().also {
-                _usersPunchInResponse.postValue(it)
+                send(it)
             }
         }
     }
