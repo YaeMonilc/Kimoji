@@ -47,4 +47,10 @@
     <string name="fragment_home_search_bar_tint">搜点什么？</string>
     <string name="fragment_search_empty_tip">没有搜索结果</string>
     <string name="fragment_search_wait_tip">输入关键字开始搜索</string>
+    <string name="fragment_profile_exp">经验</string>
+    <string name="fragment_profile_level">等级</string>
+    <string name="fragment_profile_punch">签到</string>
+    <string name="menu_action_punch_in">签到</string>
+    <string name="network_punch_in_success">签到成功！<br />上次签到日期：%s</string>
+    <string name="network_punch_in_failed">已经签到过了！</string>
 </resources>

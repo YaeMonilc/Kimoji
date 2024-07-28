@@ -1,13 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <import type="moe.wisteria.android.kimoji.entity.IndicatorState"/>
+
+        <variable
+            name="viewModel"
+            type="moe.wisteria.android.kimoji.ui.fragment.index.page.profile.ProfileModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/fragment_profile_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="@{ viewModel.indicatorState == IndicatorState.LOADING ? View.VISIBLE : View.GONE, default = gone }"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/fragment_profile_title"/>
+            android:padding="10dp"
+            android:orientation="vertical">
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:orientation="horizontal">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/fragment_profile_avatar"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:src="@drawable/baseline_person_24"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="15dp"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:ellipsize="end"
+                                android:text="@{ viewModel.profile.name }"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:ellipsize="end"
+                                android:text="@{ viewModel.profile.slogan }"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:padding="5dp"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:text="@{ viewModel.profile.level + ``, default = `0` }"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="@string/fragment_profile_level"/>
+                        </LinearLayout>
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:padding="5dp"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:text="@{ viewModel.profile.exp + ``, default = `0` }"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="@string/fragment_profile_exp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="@{ viewModel.profile.characters.size > 0 ? View.VISIBLE : View.GONE, default = gone }"
+                        android:orientation="vertical">
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="8dp">
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/fragment_profile_characters"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:listitem="@layout/item_label"
+                                tools:itemCount="1"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

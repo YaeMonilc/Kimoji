@@ -2,23 +2,50 @@ package moe.wisteria.android.kimoji.ui.fragment.index.page.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.MenuProvider
+import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.flexbox.FlexboxLayoutManager
 import moe.wisteria.android.kimoji.R
 import moe.wisteria.android.kimoji.databinding.FragmentProfileBinding
+import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onError
+import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onException
+import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onSuccess
+import moe.wisteria.android.kimoji.ui.adapter.LabelAdapter
+import moe.wisteria.android.kimoji.ui.fragment.signIn.SignInFragmentDirections
 import moe.wisteria.android.kimoji.ui.view.BaseFragment
+import moe.wisteria.android.kimoji.util.PreferenceKeys
+import moe.wisteria.android.kimoji.util.getLocalization
+import moe.wisteria.android.kimoji.util.launchIO
+import moe.wisteria.android.kimoji.util.loadImage
+import moe.wisteria.android.kimoji.util.userDatastore
 
 class ProfileFragment : BaseFragment(
     toolBarOption = ToolBarOption(
         title = R.string.fragment_profile_title
     )
 ) {
+    private var view: View? = null
     private lateinit var binding: FragmentProfileBinding
     private val viewModel: ProfileModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        launchIO {
+            requireContext().userDatastore.edit {
+                it[PreferenceKeys.USER.TOKEN]?.let { token ->
+                    viewModel.getProfile(
+                        token = token
+                    )
+                }
+            }
+        }
     }
 
     override fun onCreateView(
@@ -26,18 +53,87 @@ class ProfileFragment : BaseFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return FragmentProfileBinding.inflate(inflater, container, false).apply {
-            lifecycleOwner = viewLifecycleOwner
-        }.also {
+        return (view ?: FragmentProfileBinding.inflate(inflater, container, false).also {
             binding = it
-        }.root
+            view = binding.root
+        }.root).also {
+            binding.lifecycleOwner = viewLifecycleOwner
+            binding.viewModel = viewModel
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.let { viewModel ->
+            viewModel.profile.observe(viewLifecycleOwner) {
+                it.avatar?.let { avatar ->
+                    binding.fragmentProfileAvatar.loadImage(
+                        data = "${ avatar.fileServer }/static/${ avatar.path }"
+                    )
+                }
+
+                binding.fragmentProfileCharacters.apply {
+                    adapter = LabelAdapter(
+                        context = requireContext(),
+                        labelList = it.characters
+                    )
+                    layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                }
+            }
+
+            viewModel.usersProfileResponse.observe(viewLifecycleOwner) {
+                it.onError { errorResponse ->
+                    showSnackBar(getLocalization(errorResponse.error))
+                }.onException { exception ->
+                    showSnackBar(exception.stackTraceToString())
+                }
+            }
+
+            viewModel.usersPunchInResponse.observe(viewLifecycleOwner) {
+                it.onSuccess { usersPunchInResponse ->
+                    usersPunchInResponse.data.res.let { result ->
+                        if (result.status == "ok") {
+                            showSnackBar(getString(R.string.network_punch_in_success, result.punchInLastDay))
+                        } else {
+                            showSnackBar(getString(R.string.network_punch_in_failed))
+                        }
+                    }
+                }.onError { errorResponse ->
+                    showSnackBar(getLocalization(errorResponse.error))
+                }.onException { exception ->
+                    showSnackBar(exception.stackTraceToString())
+                }
+            }
+        }
     }
 
     override fun onStart() {
         super.onStart()
+    }
+
+    override fun getMenuProvider(): MenuProvider {
+        return object : DefaultMenuProvider(
+            menuRes = R.menu.menu_fragment_profile_toolbar
+        ) {
+            override fun onMenuItemClick(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.menu_action_punch_in -> {
+                        launchIO {
+                            requireContext().userDatastore.edit {
+                                it[PreferenceKeys.USER.TOKEN]?.let { token ->
+                                    viewModel.punchIn(
+                                        token = token
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    else -> {}
+                }
+
+                return true
+            }
+        }
     }
 }
