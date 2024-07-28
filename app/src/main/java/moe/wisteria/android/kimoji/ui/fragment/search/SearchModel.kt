@@ -64,7 +64,7 @@ class SearchModel : ViewModel() {
                 it.data.comics.let { comics ->
                     _searchState.value!!.comics.let { originList ->
                         _searchState.postValue(
-                            _searchState.value!!.copy(
+                            SearchState(
                                 state = if (originList.isEmpty() && comics.docs.isEmpty())
                                     SearchState.State.EMPTY
                                 else
@@ -93,7 +93,7 @@ class SearchModel : ViewModel() {
         PageController.reset()
 
         _searchState.postValue(
-            _searchState.value!!.copy(
+            SearchState(
                 state = SearchState.State.WAIT,
                 comics = listOf()
             )

@@ -2,6 +2,8 @@ package moe.wisteria.android.kimoji.ui.fragment.search
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,10 +62,33 @@ class SearchFragment : BaseFragment(
                 show()
 
                 editText.apply {
+                    addTextChangedListener(object : TextWatcher {
+                        override fun beforeTextChanged(
+                            p0: CharSequence?,
+                            p1: Int,
+                            p2: Int,
+                            p3: Int
+                        ) {
+
+                        }
+                        override fun onTextChanged(
+                            p0: CharSequence?,
+                            p1: Int,
+                            p2: Int,
+                            p3: Int
+                        ) {
+                            viewModel.setSearchContent(p0.toString())
+                        }
+                        override fun afterTextChanged(
+                            p0: Editable?
+                        ) {
+
+                        }
+                    })
+
                     setOnEditorActionListener { _, i, _ ->
                         if (i == EditorInfo.IME_ACTION_SEARCH) {
-                            viewModel.setSearchContent(text.toString())
-                            viewModel.prepareReSearch()
+                            prepareReSearch()
                             search()
 
                             (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
@@ -113,7 +138,6 @@ class SearchFragment : BaseFragment(
             viewModel.searchState.observe(viewLifecycleOwner) {
                 (binding.fragmentSearchComicList.adapter as ColumnComicAdapter).let { columnComicAdapter ->
                     when (it.state) {
-                        SearchState.State.WAIT -> columnComicAdapter.removeAll()
                         SearchState.State.SUCCESS -> columnComicAdapter.insertComics(*it.comics.takeLast(20).toTypedArray())
                         else -> {}
                     }
@@ -136,5 +160,10 @@ class SearchFragment : BaseFragment(
                 }
             }
         }
+    }
+
+    private fun prepareReSearch() {
+        viewModel.prepareReSearch()
+        (binding.fragmentSearchComicList.adapter as ColumnComicAdapter).removeAll()
     }
 }
