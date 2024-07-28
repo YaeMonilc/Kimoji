@@ -2,6 +2,7 @@ package moe.wisteria.android.kimoji.network.entity.response
 
 import moe.wisteria.android.kimoji.entity.BaseComic
 import moe.wisteria.android.kimoji.entity.Comics
+import moe.wisteria.android.kimoji.entity.Profile
 import java.lang.Exception
 
 data class PicaResponse<T>(
@@ -89,5 +90,36 @@ data class PicaResponse<T>(
         data class Data(
             val comics: Comics
         )
+    }
+
+    class UsersProfile(
+        code: Int,
+        message: String,
+        val data: Data
+    ) : BaseResponse(
+        code = code,
+        message = message
+    ) {
+        data class Data(
+            val user: Profile
+        )
+    }
+
+    class UsersPunchIn(
+        code: Int,
+        message: String,
+        val data: Data
+    ) : BaseResponse(
+        code = code,
+        message = message
+    ) {
+        data class Data(
+            val res: Result
+        ) {
+            data class Result(
+                val status: String,
+                val punchInLastDay: String
+            )
+        }
     }
 }

@@ -39,4 +39,16 @@ interface PicaApi {
         @Query("page")
         page: Int = 1
     ): Call<ResponseBody>
+
+    @GET("/users/profile")
+    fun usersProfile(
+        @Header("authorization")
+        token: String
+    ): Call<ResponseBody>
+
+    @POST("/users/punch-in")
+    fun usersPunchIn(
+        @Header("authorization")
+        token: String
+    ): Call<ResponseBody>
 }
