@@ -89,7 +89,7 @@ fun BaseFragment.picaExceptionHandler(
     length: Int = Snackbar.LENGTH_SHORT
 ) {
     if (exception is PicaResponse.Companion.ErrorResponseException)
-        showSnackBar(getLocalization(exception.body.message), view, length)
+        showSnackBar(getLocalization(exception.body.error), view, length)
     else
         exception.message?.let { message ->
             showSnackBar(message, view, length)
