@@ -8,6 +8,12 @@ enum class Sort(
     LIKE("ld"),
     FAVORITE("vd");
 
+    companion object {
+        fun getByOrdinal(index: Int): Sort {
+            return entries[index]
+        }
+    }
+
     override fun toString(): String {
         return this.string
     }

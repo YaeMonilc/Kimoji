@@ -52,4 +52,12 @@
     <string name="menu_action_punch_in">Punch in</string>
     <string name="network_punch_in_success">Punch in success. <br />Last punch in day: %s</string>
     <string name="network_punch_in_failed">Already punch in!</string>
+    <string name="dialog_sort_selector_radio_new">New</string>
+    <string name="dialog_sort_selector_radio_old">Old</string>
+    <string name="dialog_sort_selector_radio_liked">Liked</string>
+    <string name="dialog_sort_selector_radio_favorite">Favorite</string>
+    <string name="fragment_search_filter">Filter</string>
+    <string name="dialog_sort_selector_title">Sort selector</string>
+    <string name="dialog_sort_selector_radio_ok">OK</string>
+    <string name="dialog_sort_selector_radio_cancel">Cancel</string>
 </resources>

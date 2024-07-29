@@ -53,4 +53,12 @@
     <string name="menu_action_punch_in">签到</string>
     <string name="network_punch_in_success">签到成功！<br />上次签到日期：%s</string>
     <string name="network_punch_in_failed">已经签到过了！</string>
+    <string name="dialog_sort_selector_radio_new">新在前</string>
+    <string name="dialog_sort_selector_radio_old">旧在前</string>
+    <string name="dialog_sort_selector_radio_liked">最多喜欢</string>
+    <string name="dialog_sort_selector_radio_favorite">最多指名</string>
+    <string name="fragment_search_filter">过滤</string>
+    <string name="dialog_sort_selector_title">过滤选择</string>
+    <string name="dialog_sort_selector_radio_ok">确定</string>
+    <string name="dialog_sort_selector_radio_cancel">取消</string>
 </resources>

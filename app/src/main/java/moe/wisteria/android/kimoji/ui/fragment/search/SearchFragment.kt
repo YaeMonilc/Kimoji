@@ -15,8 +15,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import moe.wisteria.android.kimoji.R
 import moe.wisteria.android.kimoji.databinding.FragmentSearchBinding
 import moe.wisteria.android.kimoji.entity.SearchState
+import moe.wisteria.android.kimoji.entity.Sort
 import moe.wisteria.android.kimoji.ui.adapter.ColumnComicAdapter
 import moe.wisteria.android.kimoji.ui.view.BaseFragment
 import moe.wisteria.android.kimoji.util.PreferenceKeys
@@ -62,25 +65,24 @@ class SearchFragment : BaseFragment(
                 editText.apply {
                     addTextChangedListener(object : TextWatcher {
                         override fun beforeTextChanged(
-                            p0: CharSequence?,
-                            p1: Int,
-                            p2: Int,
-                            p3: Int
+                            s: CharSequence?,
+                            start: Int,
+                            count: Int,
+                            after: Int
                         ) {
 
                         }
+
                         override fun onTextChanged(
-                            p0: CharSequence?,
-                            p1: Int,
-                            p2: Int,
-                            p3: Int
+                            s: CharSequence?,
+                            start: Int,
+                            before: Int,
+                            count: Int
                         ) {
-                            viewModel.setSearchContent(p0.toString())
+                            viewModel.setSearchContent(s.toString())
                         }
-                        override fun afterTextChanged(
-                            p0: Editable?
-                        ) {
 
+                        override fun afterTextChanged(s: Editable?) {
                         }
                     })
 
@@ -97,6 +99,10 @@ class SearchFragment : BaseFragment(
                         false
                     }
                 }
+            }
+
+            binding.fragmentSearchFilter.setOnClickListener {
+                showFilterDialog()
             }
 
             binding.fragmentSearchComicList.apply {
@@ -157,5 +163,37 @@ class SearchFragment : BaseFragment(
     private fun prepareReSearch() {
         viewModel.prepareReSearch()
         (binding.fragmentSearchComicList.adapter as ColumnComicAdapter).removeAll()
+    }
+
+    private fun showFilterDialog() {
+        requireContext().let { context ->
+            MaterialAlertDialogBuilder(context).apply {
+                val item = listOf(
+                    getString(R.string.dialog_sort_selector_radio_new),
+                    getString(R.string.dialog_sort_selector_radio_old),
+                    getString(R.string.dialog_sort_selector_radio_liked),
+                    getString(R.string.dialog_sort_selector_radio_favorite)
+                )
+
+                var select: Int = viewModel.sort.value!!.ordinal
+
+                setTitle(R.string.dialog_sort_selector_title)
+
+                setSingleChoiceItems(item.toTypedArray(), select
+                ) { _, which ->
+                    select = which
+                }
+
+                setNegativeButton(R.string.dialog_sort_selector_radio_cancel
+                ) { _, _ -> }
+
+                setPositiveButton(R.string.dialog_sort_selector_radio_ok
+                ) { _, _ ->
+                    viewModel.setSort(Sort.getByOrdinal(select))
+                    prepareReSearch()
+                    search()
+                }
+            }.show()
+        }
     }
 }
