@@ -49,9 +49,8 @@ class SplashModel : ViewModel() {
                 navigateToSignIn()
             }.collect {
                 _token.postValue(it)
+                navigateToIndex()
             }
-
-            navigateToIndex()
         }
     }
 
