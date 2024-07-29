@@ -12,12 +12,9 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import moe.wisteria.android.kimoji.R
 import moe.wisteria.android.kimoji.databinding.FragmentRegisterBinding
-import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onError
-import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onException
-import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onSuccess
 import moe.wisteria.android.kimoji.ui.view.BaseFragment
 import moe.wisteria.android.kimoji.util.TextInputLayoutControllerList
-import moe.wisteria.android.kimoji.util.getLocalization
+import moe.wisteria.android.kimoji.util.picaExceptionHandler
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -98,23 +95,6 @@ class RegisterFragment : BaseFragment(
         }
 
         viewModel.let { viewModel ->
-            viewModel.registerResponse.observe(viewLifecycleOwner) {
-                it.onSuccess {
-                    setFragmentResult(GET_REGISTER_RESULT, Bundle().apply {
-                        putString(GET_REGISTER_RESULT_EMAIL, viewModel.email.value)
-                        putString(GET_REGISTER_RESULT_PASSWORD, viewModel.password.value)
-                    })
-
-                    findNavController().popBackStack()
-                }.onError { error ->
-                    showSnackBar(getLocalization(error.message))
-                }.onException { exception ->
-                    exception.message?.let { message ->
-                        showSnackBar(message)
-                    }
-                }
-            }
-
             binding.fragmentRegisterBirthday.setEndIconOnClickListener {
                 MaterialDatePicker.Builder.datePicker().build().apply {
                     addOnPositiveButtonClickListener {
@@ -139,7 +119,7 @@ class RegisterFragment : BaseFragment(
                     return@setOnClickListener
                 }
 
-                viewModel.register()
+                register()
             }
         }
     }
@@ -154,6 +134,21 @@ class RegisterFragment : BaseFragment(
                 findNavController().popBackStack()
                 return true
             }
+        }
+    }
+
+    private fun register() {
+        viewModel.register(
+            success = {
+                setFragmentResult(GET_REGISTER_RESULT, Bundle().apply {
+                    putString(GET_REGISTER_RESULT_EMAIL, viewModel.email.value)
+                    putString(GET_REGISTER_RESULT_PASSWORD, viewModel.password.value)
+                })
+
+                findNavController().popBackStack()
+            }
+        ) {
+            picaExceptionHandler(it)
         }
     }
 }

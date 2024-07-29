@@ -3,40 +3,15 @@ package moe.wisteria.android.kimoji.network.entity.response
 import moe.wisteria.android.kimoji.entity.BaseComic
 import moe.wisteria.android.kimoji.entity.Comics
 import moe.wisteria.android.kimoji.entity.Profile
-import java.lang.Exception
+import kotlin.Exception
 
 data class PicaResponse<T>(
-    val status: Status = Status.WAITING,
-    val data: T? = null,
-    val error: ErrorResponse? = null,
-    val exception: Exception? = null
+    val response: T? = null
 ) {
     companion object {
-        fun <T> PicaResponse<T>.onSuccess(block: (T) -> Unit): PicaResponse<T> {
-            if (status == Status.SUCCESS)
-                data?.let(block)
-
-            return this
-        }
-        fun <T> PicaResponse<T>.onError(block: (ErrorResponse) -> Unit): PicaResponse<T> {
-            if (status == Status.ERROR)
-                error?.let(block)
-
-            return this
-        }
-        fun <T> PicaResponse<T>.onException(block: (Exception) -> Unit): PicaResponse<T> {
-            if (status == Status.EXCEPTION)
-                exception?.let(block)
-
-            return this
-        }
-    }
-
-    enum class Status {
-        WAITING,
-        SUCCESS,
-        ERROR,
-        EXCEPTION
+        class ErrorResponseException(
+            val body: ErrorResponse
+        ): Exception()
     }
 
     open class BaseResponse(

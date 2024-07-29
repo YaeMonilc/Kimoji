@@ -12,13 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 import moe.wisteria.android.kimoji.R
 import moe.wisteria.android.kimoji.databinding.FragmentHomeBinding
 import moe.wisteria.android.kimoji.entity.IndicatorState
-import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onError
-import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onException
 import moe.wisteria.android.kimoji.ui.adapter.ColumnComicAdapter
 import moe.wisteria.android.kimoji.ui.view.BaseFragment
 import moe.wisteria.android.kimoji.util.PreferenceKeys
-import moe.wisteria.android.kimoji.util.getLocalization
 import moe.wisteria.android.kimoji.util.launchIO
+import moe.wisteria.android.kimoji.util.picaExceptionHandler
 import moe.wisteria.android.kimoji.util.userDatastore
 
 class HomeFragment : BaseFragment(
@@ -33,7 +31,7 @@ class HomeFragment : BaseFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        loadRandomComics()
+        loadComics()
     }
 
     override fun onCreateView(
@@ -80,18 +78,10 @@ class HomeFragment : BaseFragment(
 
                         if (recyclerView.computeVerticalScrollOffset() > 0 &&!recyclerView.canScrollVertically(1)
                             && viewModel.indicatorState.value != IndicatorState.LOADING) {
-                            loadRandomComics()
+                            loadComics()
                         }
                     }
                 })
-            }
-
-            viewModel.randomComicsResponse.observe(viewLifecycleOwner) {
-                it.onError { errorResponse ->
-                    showSnackBar(getLocalization(errorResponse.error))
-                }.onException { exception ->
-                    showSnackBar(exception.stackTraceToString())
-                }
             }
 
             viewModel.comicList.observe(viewLifecycleOwner) {
@@ -106,13 +96,18 @@ class HomeFragment : BaseFragment(
         super.onStart()
     }
 
-    private fun loadRandomComics() {
+    private fun loadComics() {
         launchIO {
             requireContext().userDatastore.edit {
                 it[PreferenceKeys.USER.TOKEN]?.let { token ->
-                    viewModel.loadRandomComics(
+                    viewModel.loadComics(
                         token = token
-                    )
+                    ) { exception ->
+                        picaExceptionHandler(
+                            exception = exception,
+                            view = binding.fragmentHomeComicList
+                        )
+                    }
                 }
             }
         }

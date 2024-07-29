@@ -3,22 +3,15 @@ package moe.wisteria.android.kimoji.ui.fragment.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.catch
 import moe.wisteria.android.kimoji.entity.SearchState
-import moe.wisteria.android.kimoji.network.entity.body.SearchBody
-import moe.wisteria.android.kimoji.network.entity.response.PicaResponse
-import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onSuccess
-import moe.wisteria.android.kimoji.network.picaApi
-import moe.wisteria.android.kimoji.util.executeForPica
+import moe.wisteria.android.kimoji.repository.network.PicaRepository
 import moe.wisteria.android.kimoji.util.launchIO
 
 class SearchModel : ViewModel() {
     private val _searchState: MutableLiveData<SearchState> = MutableLiveData(SearchState())
     val searchState: LiveData<SearchState>
         get() = _searchState
-
-    private val _searchResponse: MutableLiveData<PicaResponse<PicaResponse.ComicList>> = MutableLiveData()
-    val searchResponse: LiveData<PicaResponse<PicaResponse.ComicList>>
-        get() = _searchResponse
 
     private val _searchContent: MutableLiveData<String> = MutableLiveData("")
 
@@ -43,7 +36,8 @@ class SearchModel : ViewModel() {
     }
 
     fun search(
-        token: String
+        token: String,
+        exceptionHandler: (Exception) -> Unit
     ) {
         _searchState.postValue(
             _searchState.value!!.copy(
@@ -52,31 +46,22 @@ class SearchModel : ViewModel() {
         )
 
         launchIO {
-            picaApi.searchComic(
+            PicaRepository.Comics.search(
                 token = token,
-                body = SearchBody(
-                    keyword = _searchContent.value!!
-                ),
+                keyword = _searchContent.value!!,
                 page = PageController.nextPage()
-            ).executeForPica<PicaResponse.ComicList>().also {
-                _searchResponse.postValue(it)
-            }.onSuccess {
-                it.data.comics.let { comics ->
-                    _searchState.value!!.comics.let { originList ->
-                        _searchState.postValue(
-                            SearchState(
-                                state = if (originList.isEmpty() && comics.docs.isEmpty())
-                                    SearchState.State.EMPTY
-                                else
-                                    SearchState.State.SUCCESS,
-                                comics = originList.plus(comics.docs)
-                            )
+            ).catch {
+                exceptionHandler(it as Exception)
+            }.collect {
+                _searchState.value!!.comics.let { originComics ->
+                    _searchState.postValue(
+                        _searchState.value!!.copy(
+                            state = if (it.docs.isEmpty())
+                                SearchState.State.EMPTY
+                            else
+                                SearchState.State.SUCCESS,
+                            comics = originComics.plus(it.docs)
                         )
-                    }
-
-                    PageController.set(
-                        currentPage = comics.page,
-                        totalPage = comics.pages
                     )
                 }
             }

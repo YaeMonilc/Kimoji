@@ -10,12 +10,9 @@ import android.view.animation.TranslateAnimation
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import moe.wisteria.android.kimoji.databinding.FragmentSplashBinding
-import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onException
-import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onSuccess
 import moe.wisteria.android.kimoji.ui.view.BaseFragment
 import moe.wisteria.android.kimoji.util.MAIN
 import moe.wisteria.android.kimoji.util.PreferenceKeys
@@ -105,16 +102,10 @@ class SplashFragment : BaseFragment(
                 }
             }
 
-            viewModel.signInResponse.observe(viewLifecycleOwner) {
-                it.onSuccess {
-                    launchIO {
-                        requireContext().userDatastore.edit { userDatastore ->
-                            userDatastore[PreferenceKeys.USER.TOKEN] = it.data.token
-                        }
-                    }
-                }.onException { exception ->
-                    exception.message?.let { message ->
-                        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
+            viewModel.token.observe(viewLifecycleOwner) { token ->
+                launchIO {
+                    requireContext().userDatastore.edit {
+                        it[PreferenceKeys.USER.TOKEN] = token
                     }
                 }
             }

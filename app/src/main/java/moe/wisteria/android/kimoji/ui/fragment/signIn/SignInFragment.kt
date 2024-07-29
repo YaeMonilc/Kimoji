@@ -9,21 +9,16 @@ import androidx.core.view.MenuProvider
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import kotlinx.coroutines.launch
 import moe.wisteria.android.kimoji.R
 import moe.wisteria.android.kimoji.databinding.FragmentSignInBinding
-import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onError
-import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onException
-import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onSuccess
 import moe.wisteria.android.kimoji.ui.fragment.register.RegisterFragment
 import moe.wisteria.android.kimoji.ui.view.BaseFragment
-import moe.wisteria.android.kimoji.util.IO
 import moe.wisteria.android.kimoji.util.PreferenceKeys
 import moe.wisteria.android.kimoji.util.TextInputLayoutControllerList
-import moe.wisteria.android.kimoji.util.getLocalization
 import moe.wisteria.android.kimoji.util.launchIO
+import moe.wisteria.android.kimoji.util.launchUI
+import moe.wisteria.android.kimoji.util.picaExceptionHandler
 import moe.wisteria.android.kimoji.util.userDatastore
 
 class SignInFragment : BaseFragment(
@@ -89,32 +84,12 @@ class SignInFragment : BaseFragment(
                 viewModel.setPassword(bundle.getString(RegisterFragment.GET_REGISTER_RESULT_PASSWORD))
             }
 
-            viewModel.signInResponse.observe(viewLifecycleOwner) {
-                it.onSuccess { data ->
-                    lifecycleScope.launch(IO) {
-                        requireContext().userDatastore.edit { userDatastore ->
-                            userDatastore[PreferenceKeys.USER.EMAIL] = viewModel.email.value!!
-                            userDatastore[PreferenceKeys.USER.PASSWORD] = viewModel.password.value!!
-                            userDatastore[PreferenceKeys.USER.TOKEN] = data.data.token
-                        }
-                    }
-
-                    findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToIndexFragment())
-                }.onError { error ->
-                    showSnackBar(getLocalization(error.message))
-                }.onException { exception ->
-                    exception.message?.let { message ->
-                        showSnackBar(message)
-                    }
-                }
-            }
-
             binding.fragmentSignInOk.setOnClickListener {
                 if (!textInputLayoutControllerList.checkAll()) {
                     return@setOnClickListener
                 }
 
-                viewModel.signIn()
+                signIn()
             }
         }
     }
@@ -136,6 +111,24 @@ class SignInFragment : BaseFragment(
                 }
 
                 return true
+            }
+        }
+    }
+
+    private fun signIn() {
+        launchIO {
+            viewModel.signIn {
+                picaExceptionHandler(it)
+            }?.let { token ->
+                requireContext().userDatastore.edit {
+                    it[PreferenceKeys.USER.EMAIL] = viewModel.email.value!!
+                    it[PreferenceKeys.USER.PASSWORD] = viewModel.password.value!!
+                    it[PreferenceKeys.USER.TOKEN] = token
+                }
+
+                launchUI {
+                    findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToIndexFragment())
+                }
             }
         }
     }

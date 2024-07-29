@@ -8,21 +8,15 @@ import android.view.ViewGroup
 import androidx.core.view.MenuProvider
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.flexbox.FlexboxLayoutManager
 import moe.wisteria.android.kimoji.R
 import moe.wisteria.android.kimoji.databinding.FragmentProfileBinding
-import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onError
-import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onException
-import moe.wisteria.android.kimoji.network.entity.response.PicaResponse.Companion.onSuccess
 import moe.wisteria.android.kimoji.ui.adapter.LabelAdapter
-import moe.wisteria.android.kimoji.ui.fragment.signIn.SignInFragmentDirections
 import moe.wisteria.android.kimoji.ui.view.BaseFragment
 import moe.wisteria.android.kimoji.util.PreferenceKeys
-import moe.wisteria.android.kimoji.util.getLocalization
 import moe.wisteria.android.kimoji.util.launchIO
 import moe.wisteria.android.kimoji.util.loadImage
+import moe.wisteria.android.kimoji.util.picaExceptionHandler
 import moe.wisteria.android.kimoji.util.userDatastore
 
 class ProfileFragment : BaseFragment(
@@ -37,15 +31,7 @@ class ProfileFragment : BaseFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        launchIO {
-            requireContext().userDatastore.edit {
-                it[PreferenceKeys.USER.TOKEN]?.let { token ->
-                    viewModel.getProfile(
-                        token = token
-                    )
-                }
-            }
-        }
+        loadProfile()
     }
 
     override fun onCreateView(
@@ -81,14 +67,6 @@ class ProfileFragment : BaseFragment(
                     layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 }
             }
-
-            viewModel.usersProfileResponse.observe(viewLifecycleOwner) {
-                it.onError { errorResponse ->
-                    showSnackBar(getLocalization(errorResponse.error))
-                }.onException { exception ->
-                    showSnackBar(exception.stackTraceToString())
-                }
-            }
         }
     }
 
@@ -102,35 +80,46 @@ class ProfileFragment : BaseFragment(
         ) {
             override fun onMenuItemClick(menuItem: MenuItem): Boolean {
                 when (menuItem.itemId) {
-                    R.id.menu_action_punch_in -> {
-                        launchIO {
-                            requireContext().userDatastore.edit {
-                                it[PreferenceKeys.USER.TOKEN]?.let { token ->
-                                    viewModel.punchIn(
-                                        token = token
-                                    ).collect { response ->
-                                        response.onSuccess { usersPunchIn ->
-                                            usersPunchIn.data.res.let { result ->
-                                                if (result.status == "ok") {
-                                                    showSnackBar(getString(R.string.network_punch_in_success, result.punchInLastDay))
-                                                } else {
-                                                    showSnackBar(getString(R.string.network_punch_in_failed))
-                                                }
-                                            }
-                                        }.onError { errorResponse ->
-                                            showSnackBar(getLocalization(errorResponse.error))
-                                        }.onException { exception ->
-                                            showSnackBar(exception.stackTraceToString())
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    R.id.menu_action_punch_in -> punchIn()
                     else -> {}
                 }
 
                 return true
+            }
+        }
+    }
+
+    private fun loadProfile() {
+        launchIO {
+            requireContext().userDatastore.edit {
+                it[PreferenceKeys.USER.TOKEN]?.let { token ->
+                    viewModel.loadProfile(
+                        token = token,
+                        exceptionHandler = { exception ->
+                            picaExceptionHandler(exception)
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    private fun punchIn() {
+        launchIO {
+            requireContext().userDatastore.edit {
+                it[PreferenceKeys.USER.TOKEN]?.let { token ->
+                    viewModel.punchIn(
+                        token = token,
+                        exceptionHandler = { exception ->
+                            picaExceptionHandler(exception)
+                        }
+                    ).collect { result ->
+                        if (result.status == "ok")
+                            showSnackBar(getString(R.string.network_punch_in_success, result.punchInLastDay))
+                        else
+                            showSnackBar(R.string.network_punch_in_failed)
+                    }
+                }
             }
         }
     }
