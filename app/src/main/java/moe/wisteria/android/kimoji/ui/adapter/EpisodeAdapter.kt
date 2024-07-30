@@ -52,7 +52,7 @@ class EpisodeAdapter(
         episode: Episode
     ) {
         _episodeList.add(episode)
-        notifyItemInserted(_episodeList.size - 1)
+        notifyItemInserted(_episodeList.size)
     }
 
     fun insertEpisodes(
