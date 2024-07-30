@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import moe.wisteria.android.kimoji.R
 import moe.wisteria.android.kimoji.databinding.FragmentHomeBinding
 import moe.wisteria.android.kimoji.entity.IndicatorState
 import moe.wisteria.android.kimoji.ui.adapter.ColumnComicAdapter
+import moe.wisteria.android.kimoji.ui.fragment.index.IndexFragmentDirections
 import moe.wisteria.android.kimoji.ui.view.BaseFragment
 import moe.wisteria.android.kimoji.util.PreferenceKeys
 import moe.wisteria.android.kimoji.util.launchIO
@@ -54,7 +56,7 @@ class HomeFragment : BaseFragment(
         viewModel.let { viewModel ->
             binding.fragmentHomeSearchBar.setOnClickListener {
                 Navigation.findNavController(requireActivity(), R.id.activity_main_fragment_container).navigate(
-                    R.id.action_indexFragment_to_searchFragment
+                    IndexFragmentDirections.actionToSearchFragment()
                 )
             }
 
@@ -62,7 +64,11 @@ class HomeFragment : BaseFragment(
                 adapter = ColumnComicAdapter(
                     context = context,
                     itemOnClickListener = {
-                        showSnackBar(it.author, binding.fragmentHomeComicList)
+                        Navigation.findNavController(requireActivity(), R.id.activity_main_fragment_container).navigate(
+                            IndexFragmentDirections.actionToComicDetailFragment(
+                                it.id
+                            )
+                        )
                     },
                     comicList = viewModel.comicList.value ?: listOf()
                 ).apply {

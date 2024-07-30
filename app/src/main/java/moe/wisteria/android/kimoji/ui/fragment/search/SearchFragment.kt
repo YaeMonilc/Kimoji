@@ -109,7 +109,11 @@ class SearchFragment : BaseFragment(
                 adapter = ColumnComicAdapter(
                     context = requireContext(),
                     itemOnClickListener = {
-
+                        findNavController().navigate(
+                            SearchFragmentDirections.actionToComicDetailFragment(
+                                it.id
+                            )
+                        )
                     },
                     comicList = viewModel.searchState.value?.comics ?: listOf()
                 ).apply {
