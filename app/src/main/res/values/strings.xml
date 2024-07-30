@@ -60,4 +60,10 @@
     <string name="dialog_sort_selector_title">Sort selector</string>
     <string name="dialog_sort_selector_radio_ok">OK</string>
     <string name="dialog_sort_selector_radio_cancel">Cancel</string>
+    <string name="fragment_comic_detail_title">Comic detail</string>
+    <string name="fragment_comic_detail_category">Category</string>
+    <string name="fragment_comic_tag">Tag</string>
+    <string name="fragment_comic_detail_read">Read</string>
+    <string name="fragment_comic_detail_episode_load_more">Load more episode</string>
+    <string name="fragment_comic_detail_episode">Episode</string>
 </resources>

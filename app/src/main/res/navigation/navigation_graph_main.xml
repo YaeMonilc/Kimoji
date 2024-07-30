@@ -84,15 +84,7 @@
         android:id="@+id/indexFragment"
         android:name="moe.wisteria.android.kimoji.ui.fragment.index.IndexFragment"
         android:label="IndexFragment"
-        tools:layout="@layout/fragment_index">
-        <action
-            android:id="@+id/action_indexFragment_to_searchFragment"
-            app:destination="@id/searchFragment"
-            app:enterAnim="@anim/anim_navigation_default_enter"
-            app:exitAnim="@anim/anim_navigation_default_exit"
-            app:popEnterAnim="@anim/anim_navigation_default_pop_enter"
-            app:popExitAnim="@anim/anim_navigation_default_pop_exit"/>
-    </fragment>
+        tools:layout="@layout/fragment_index"/>
     <fragment
         android:id="@+id/registerFragment"
         android:name="moe.wisteria.android.kimoji.ui.fragment.register.RegisterFragment"
@@ -103,4 +95,30 @@
         android:name="moe.wisteria.android.kimoji.ui.fragment.search.SearchFragment"
         android:label="SearchFragment"
         tools:layout="@layout/fragment_search"/>
+    <fragment
+        android:id="@+id/comicDetailFragment"
+        android:name="moe.wisteria.android.kimoji.ui.fragment.comicDetail.ComicDetailFragment"
+        android:label="ComicDetailFragment"
+        tools:layout="@layout/fragment_comic_detail">
+        <argument
+            android:name="comicId"
+            app:argType="string" />
+    </fragment>
+
+
+    <action
+        android:id="@+id/action_to_searchFragment"
+        app:destination="@id/searchFragment"
+        app:enterAnim="@anim/anim_navigation_default_enter"
+        app:exitAnim="@anim/anim_navigation_default_exit"
+        app:popEnterAnim="@anim/anim_navigation_default_pop_enter"
+        app:popExitAnim="@anim/anim_navigation_default_pop_exit"/>
+
+    <action
+        android:id="@+id/action_to_comicDetailFragment"
+        app:destination="@id/comicDetailFragment"
+        app:enterAnim="@anim/anim_navigation_default_enter"
+        app:exitAnim="@anim/anim_navigation_default_exit"
+        app:popEnterAnim="@anim/anim_navigation_default_pop_enter"
+        app:popExitAnim="@anim/anim_navigation_default_pop_exit"/>
 </navigation>

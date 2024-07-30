@@ -61,4 +61,10 @@
     <string name="dialog_sort_selector_title">过滤选择</string>
     <string name="dialog_sort_selector_radio_ok">确定</string>
     <string name="dialog_sort_selector_radio_cancel">取消</string>
+    <string name="fragment_comic_detail_title">漫画详情</string>
+    <string name="fragment_comic_detail_category">分类</string>
+    <string name="fragment_comic_tag">标签</string>
+    <string name="fragment_comic_detail_read">阅读</string>
+    <string name="fragment_comic_detail_episode_load_more">加载更多章节</string>
+    <string name="fragment_comic_detail_episode">章节</string>
 </resources>
