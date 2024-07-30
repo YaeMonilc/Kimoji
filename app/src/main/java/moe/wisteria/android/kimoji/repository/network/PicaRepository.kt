@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.channelFlow
 import moe.wisteria.android.kimoji.entity.BaseComic
 import moe.wisteria.android.kimoji.entity.Comic
 import moe.wisteria.android.kimoji.entity.Episode
+import moe.wisteria.android.kimoji.entity.Order
 import moe.wisteria.android.kimoji.entity.Page
 import moe.wisteria.android.kimoji.entity.Profile
 import moe.wisteria.android.kimoji.entity.Sort
@@ -139,6 +140,24 @@ object PicaRepository {
             ).executeForPica<PicaResponse.ComicAction>().let {
                 it.response?.data?.action?.let { action ->
                     trySend(action)
+                }
+            }
+        }
+
+        fun order(
+            token: String,
+            comicId: String,
+            order: String,
+            page: Int = 1
+        ): Flow<Page<Order>> = channelFlow {
+            picaApi.comicOrder(
+                token = token,
+                comicId = comicId,
+                order = order,
+                page = page
+            ).executeForPica<PicaResponse.ComicOrder>().let {
+                it.response?.data?.pages?.let { pages ->
+                    trySend(pages)
                 }
             }
         }

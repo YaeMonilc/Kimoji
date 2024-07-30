@@ -3,6 +3,7 @@ package moe.wisteria.android.kimoji.network.entity.response
 import moe.wisteria.android.kimoji.entity.BaseComic
 import moe.wisteria.android.kimoji.entity.Comic
 import moe.wisteria.android.kimoji.entity.Episode
+import moe.wisteria.android.kimoji.entity.Order
 import moe.wisteria.android.kimoji.entity.Page
 import moe.wisteria.android.kimoji.entity.Profile
 import kotlin.Exception
@@ -79,6 +80,19 @@ data class PicaResponse<T>(
     ) {
         data class Data(
             val action: String
+        )
+    }
+
+    class ComicOrder(
+        code: Int,
+        message: String,
+        val data: Data
+    ) : BaseResponse(
+        code = code,
+        message = message
+    ) {
+        data class Data(
+            val pages: Page<Order>
         )
     }
 

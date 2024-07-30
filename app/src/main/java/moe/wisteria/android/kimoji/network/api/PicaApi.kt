@@ -51,6 +51,18 @@ interface PicaApi {
         comicId: String
     ): Call<ResponseBody>
 
+    @GET("/comics/{comicId}/order/{order}/pages")
+    fun comicOrder(
+        @Header("authorization")
+        token: String,
+        @Path("comicId")
+        comicId: String,
+        @Path("order")
+        order: String,
+        @Query("page")
+        page: Int = 1
+    ): Call<ResponseBody>
+
     @POST("/comics/{comicId}/like")
     fun comicLike(
         @Header("authorization")
