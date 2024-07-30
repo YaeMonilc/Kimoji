@@ -1,9 +1,7 @@
 package moe.wisteria.android.kimoji.ui.adapter
 
 import android.content.Context
-import android.content.DialogInterface.OnClickListener
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import moe.wisteria.android.kimoji.databinding.ItemEpisodeBinding
@@ -51,6 +49,9 @@ class EpisodeAdapter(
     fun insertEpisode(
         episode: Episode
     ) {
+        if (_episodeList.contains(episode))
+            return
+
         _episodeList.add(episode)
         notifyItemInserted(_episodeList.size)
     }
@@ -70,5 +71,13 @@ class EpisodeAdapter(
         _episodeList.clear()
 
         insertEpisodes(*episodes)
+    }
+
+    fun getFirstEpisode(): Episode? = _episodeList.firstOrNull()
+
+    fun removeAll() {
+        notifyItemRangeChanged(0, itemCount)
+
+        _episodeList.clear()
     }
 }

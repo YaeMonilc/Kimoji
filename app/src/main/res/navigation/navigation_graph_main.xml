@@ -105,6 +105,18 @@
             app:argType="string" />
     </fragment>
 
+    <fragment
+        android:id="@+id/comicViewerFragment"
+        android:name="moe.wisteria.android.kimoji.ui.fragment.comicViewer.ComicViewerFragment"
+        android:label="ComicViewerFragment"
+        tools:layout="@layout/fragment_comic_viewer">
+        <argument
+            android:name="comicId"
+            app:argType="string" />
+        <argument
+            android:name="order"
+            app:argType="string" />
+    </fragment>
 
     <action
         android:id="@+id/action_to_searchFragment"
@@ -117,6 +129,14 @@
     <action
         android:id="@+id/action_to_comicDetailFragment"
         app:destination="@id/comicDetailFragment"
+        app:enterAnim="@anim/anim_navigation_default_enter"
+        app:exitAnim="@anim/anim_navigation_default_exit"
+        app:popEnterAnim="@anim/anim_navigation_default_pop_enter"
+        app:popExitAnim="@anim/anim_navigation_default_pop_exit"/>
+
+    <action
+        android:id="@+id/action_to_comicViewerFragment"
+        app:destination="@id/comicViewerFragment"
         app:enterAnim="@anim/anim_navigation_default_enter"
         app:exitAnim="@anim/anim_navigation_default_exit"
         app:popEnterAnim="@anim/anim_navigation_default_pop_enter"

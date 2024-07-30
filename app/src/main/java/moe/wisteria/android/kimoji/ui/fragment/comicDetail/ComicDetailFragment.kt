@@ -8,6 +8,7 @@ import androidx.core.view.MenuProvider
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
@@ -28,13 +29,15 @@ class ComicDetailFragment : BaseFragment(
         displayHomeAsUpEnabled = true
     )
 ) {
+    private var view: View? = null
     private lateinit var binding: FragmentComicDetailBinding
     private val viewModel: ComicDetailModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        loadComicDetail()
+        if (viewModel.comic.value == null)
+            loadComicDetail()
     }
 
     override fun onCreateView(
@@ -42,12 +45,13 @@ class ComicDetailFragment : BaseFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return FragmentComicDetailBinding.inflate(inflater, container, false).apply {
-            lifecycleOwner = viewLifecycleOwner
-            viewModel = this@ComicDetailFragment.viewModel
-        }.also {
+        return  (view ?: FragmentComicDetailBinding.inflate(inflater, container, false).also {
             binding = it
-        }.root
+            view = binding.root
+        }.root).also {
+            binding.lifecycleOwner = viewLifecycleOwner
+            binding.viewModel = viewModel
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,17 +84,7 @@ class ComicDetailFragment : BaseFragment(
                             View.VISIBLE
                 }
 
-                (binding.fragmentComicDetailEpisodeList.adapter as EpisodeAdapter).let { adapter ->
-                    (binding.fragmentComicDetailEpisodeList.layoutManager as FlexboxLayoutManager).let { layoutManger ->
-                        if (adapter.itemCount == 2) {
-                            layoutManger.alignItems = AlignItems.FLEX_START
-                        } else {
-                            layoutManger.alignItems = AlignItems.STRETCH
-                        }
-                    }
-
-                    adapter.insertEpisodes(*it.toTypedArray())
-                }
+                (binding.fragmentComicDetailEpisodeList.adapter as EpisodeAdapter).insertEpisodes(*it.toTypedArray())
             }
 
             binding.fragmentComicDetailLiked.setOnCheckedChangeListener { _, _ ->
@@ -99,6 +93,12 @@ class ComicDetailFragment : BaseFragment(
 
             binding.fragmentComicDetailFavorite.setOnCheckedChangeListener { _, _ ->
                 favourite()
+            }
+
+            binding.fragmentComicDetailRead.setOnClickListener {
+                (binding.fragmentComicDetailEpisodeList.adapter as EpisodeAdapter).getFirstEpisode()?.let { episode ->
+                    read(episode.order)
+                }
             }
 
             binding.fragmentComicDetailCategory.apply {
@@ -129,10 +129,12 @@ class ComicDetailFragment : BaseFragment(
                 adapter = EpisodeAdapter(
                     context = requireContext(),
                     onClickListener = {
-
+                        read(it.order)
                     },
                     episodeList = viewModel.episode.value ?: listOf()
-                )
+                ).apply {
+                    stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+                }
                 layoutManager = object : FlexboxLayoutManager(requireContext()) {
                     override fun canScrollVertically(): Boolean {
                         return false
@@ -141,6 +143,8 @@ class ComicDetailFragment : BaseFragment(
                     alignItems = AlignItems.FLEX_START
                     justifyContent = JustifyContent.SPACE_BETWEEN
                 }
+
+
             }
 
             binding.fragmentComicDetailEpisodeLoadMore.setOnClickListener {
@@ -241,6 +245,13 @@ class ComicDetailFragment : BaseFragment(
     private fun read(
         order: String
     ) {
-
+        arguments?.let { arguments ->
+            findNavController().navigate(
+                ComicDetailFragmentDirections.actionToComicViewerFragment(
+                    ComicDetailFragmentArgs.fromBundle(arguments).comicId,
+                    order
+                )
+            )
+        }
     }
 }
