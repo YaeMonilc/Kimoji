@@ -35,4 +35,28 @@ class LabelAdapter(
             text = _labelList[position]
         )
     }
+
+    fun insertLabel(
+        string: String
+    ) {
+        _labelList.add(string)
+        notifyItemInserted(_labelList.size)
+    }
+
+    fun insertLabels(
+        vararg strings: String
+    ) {
+        for (str in strings) {
+            insertLabel(str)
+        }
+    }
+
+    fun replaceLabels(
+        vararg strings: String
+    ) {
+        notifyItemRangeRemoved(0, itemCount)
+        _labelList.clear()
+
+        insertLabels(*strings)
+    }
 }
