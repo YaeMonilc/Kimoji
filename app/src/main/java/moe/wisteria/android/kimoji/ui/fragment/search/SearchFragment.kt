@@ -32,6 +32,7 @@ class SearchFragment : BaseFragment(
         display = false
     )
 ) {
+    private var view: View? = null
     private lateinit var binding: FragmentSearchBinding
     private val viewModel: SearchModel by viewModels()
 
@@ -44,12 +45,13 @@ class SearchFragment : BaseFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return FragmentSearchBinding.inflate(inflater, container, false).apply {
-            lifecycleOwner = viewLifecycleOwner
-            viewModel = this@SearchFragment.viewModel
-        }.also {
+        return (view ?: FragmentSearchBinding.inflate(inflater, container, false).also {
             binding = it
-        }.root
+            view = binding.root
+        }.root).also {
+            binding.lifecycleOwner = viewLifecycleOwner
+            binding.viewModel = viewModel
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
