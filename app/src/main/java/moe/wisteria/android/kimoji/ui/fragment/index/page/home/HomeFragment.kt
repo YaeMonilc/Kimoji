@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import moe.wisteria.android.kimoji.R
