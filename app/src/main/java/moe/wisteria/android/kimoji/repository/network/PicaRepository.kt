@@ -3,6 +3,9 @@ package moe.wisteria.android.kimoji.repository.network
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import moe.wisteria.android.kimoji.entity.BaseComic
+import moe.wisteria.android.kimoji.entity.Comic
+import moe.wisteria.android.kimoji.entity.Episode
+import moe.wisteria.android.kimoji.entity.Page
 import moe.wisteria.android.kimoji.entity.Profile
 import moe.wisteria.android.kimoji.entity.Sort
 import moe.wisteria.android.kimoji.network.entity.body.RegisterBody
@@ -82,6 +85,64 @@ object PicaRepository {
         }
     }
     object Comics {
+        fun detail(
+            token: String,
+            comicId: String
+        ): Flow<Comic> = channelFlow {
+            picaApi.comicDetail(
+                token = token,
+                comicId = comicId
+            ).executeForPica<PicaResponse.ComicDetail>().let {
+                it.response?.data?.comic?.let { comic ->
+                    trySend(comic)
+                }
+            }
+        }
+
+        fun episode(
+            token: String,
+            comicId: String,
+            page: Int = 1
+        ): Flow<Page<Episode>> = channelFlow {
+            picaApi.comicEpisode(
+                token = token,
+                comicId = comicId,
+                page = page
+            ).executeForPica<PicaResponse.ComicEpisode>().let {
+                it.response?.data?.eps?.let { page ->
+                    trySend(page)
+                }
+            }
+        }
+
+        fun favourite(
+            token: String,
+            comicId: String
+        ): Flow<String> = channelFlow {
+            picaApi.comicFavourite(
+                token = token,
+                comicId = comicId
+            ).executeForPica<PicaResponse.ComicAction>().let {
+                it.response?.data?.action?.let { action ->
+                    trySend(action)
+                }
+            }
+        }
+
+        fun like(
+            token: String,
+            comicId: String
+        ): Flow<String> = channelFlow {
+            picaApi.comicLike(
+                token = token,
+                comicId = comicId
+            ).executeForPica<PicaResponse.ComicAction>().let {
+                it.response?.data?.action?.let { action ->
+                    trySend(action)
+                }
+            }
+        }
+
         fun random(
             token: String
         ): Flow<List<BaseComic>> = channelFlow {
@@ -99,7 +160,7 @@ object PicaRepository {
             keyword: String,
             page: Int = 1,
             sort: String = Sort.FAVORITE.string
-        ): Flow<moe.wisteria.android.kimoji.entity.Comics> = channelFlow {
+        ): Flow<Page<BaseComic>> = channelFlow {
             picaApi.searchComic(
                 token = token,
                 body = SearchBody(
