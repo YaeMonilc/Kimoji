@@ -58,11 +58,3 @@ class Comic(
     totalLikes,
     likesCount
 )
-
-data class Comics(
-    val docs: List<Comic>,
-    val total: Int,
-    val limit: Int,
-    val page: Int,
-    val pages: Int
-)
