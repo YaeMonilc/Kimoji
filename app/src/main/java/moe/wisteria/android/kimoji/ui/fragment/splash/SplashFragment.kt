@@ -64,29 +64,7 @@ class SplashFragment : BaseFragment(
         viewModel.let { viewModel ->
             launchUI {
                 requireContext().let { context ->
-                    if (Random.nextBoolean()) {
-                        animationList.add(
-                            TranslateAnimation(
-                                Animation.RELATIVE_TO_SELF,
-                                0f,
-                                Animation.RELATIVE_TO_SELF,
-                                0f,
-                                Animation.RELATIVE_TO_SELF,
-                                1f,
-                                Animation.RELATIVE_TO_SELF,
-                                0f
-                            ).apply {
-                                duration = AnimationOption.TRANSLATE_IMAGE_DURATION
-                                interpolator = AccelerateDecelerateInterpolator()
-                            }.also {
-                                binding.fragmentSplashImage.startAnimation(it)
-                            }
-                        )
-
-                        delay(AnimationOption.TRANSLATE_IMAGE_DURATION)
-                    } else {
-                        binding.fragmentSplashImage.visibility = View.GONE
-                    }
+                    binding.fragmentSplashImage.visibility = View.GONE
 
                     launchIO {
                         context.appDatastore.edit { appDatastore ->
