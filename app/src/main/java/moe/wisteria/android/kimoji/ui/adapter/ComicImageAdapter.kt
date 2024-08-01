@@ -10,6 +10,7 @@ import moe.wisteria.android.kimoji.util.loadImage
 
 class ComicImageAdapter(
     private val context: Context,
+    private val onClickListener: (Order) -> Unit,
     private val onLongClickListener: (Order) -> Unit,
     orderList: List<Order>
 ): RecyclerView.Adapter<ComicImageAdapter.ViewHolder>() {
@@ -17,6 +18,7 @@ class ComicImageAdapter(
 
     class ViewHolder(
         private val binding: ItemComicImageBinding,
+        private val onClickListener: (Order) -> Unit,
         private val onLongClickListener: (Order) -> Unit
     ): RecyclerView.ViewHolder(
         binding.root
@@ -31,7 +33,12 @@ class ComicImageAdapter(
                     )
 
                     setOnClickListener {
+                        onClickListener(order)
+                    }
+
+                    setOnLongClickListener {
                         onLongClickListener(order)
+                        true
                     }
                 }
             }
@@ -41,6 +48,7 @@ class ComicImageAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             binding = ItemComicImageBinding.inflate(LayoutInflater.from(context), parent, false),
+            onClickListener = onClickListener,
             onLongClickListener = onLongClickListener
         )
     }

@@ -53,14 +53,31 @@ class ComicViewerFragment : BaseFragment(
 
         viewModel.let { viewModel ->
             viewModel.orderList.observe(viewLifecycleOwner) {
-                (binding.fragmentComicViewerImageList.adapter as ComicImageAdapter).insertOrders(*it.toTypedArray())
+                (binding.fragmentComicViewerImageList.adapter as ComicImageAdapter).let { adapter ->
+                    adapter.insertOrders(*it.toTypedArray())
+
+                    binding.fragmentComicViewerImagePageSlider.valueTo = (if (adapter.itemCount == 0) 1 else adapter.itemCount - 1).toFloat()
+                }
+            }
+
+            viewModel.currentVisiblePosition.observe(viewLifecycleOwner) {
+                binding.fragmentComicViewerImagePageSlider.value = it.toFloat()
+            }
+
+            binding.fragmentComicViewerImagePageSlider.addOnChangeListener { _, value, fromUser ->
+                if (fromUser) {
+                    binding.fragmentComicViewerImageList.scrollToPosition(value.toInt())
+                }
             }
 
             binding.fragmentComicViewerImageList.apply {
                 adapter = ComicImageAdapter(
                     context = requireContext(),
+                    onClickListener = {
+                        viewModel.setControlPanelVisible(false)
+                    },
                     onLongClickListener = {
-
+                        viewModel.setControlPanelVisible(true)
                     },
                     orderList = viewModel.orderList.value ?: listOf()
                 )
@@ -69,6 +86,14 @@ class ComicViewerFragment : BaseFragment(
                 addOnScrollListener(object : OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                         super.onScrolled(recyclerView, dx, dy)
+
+                        (recyclerView.layoutManager as LinearLayoutManager).let { layoutManager ->
+                            val currentVisiblePosition = layoutManager.findFirstCompletelyVisibleItemPosition()
+
+                            if (currentVisiblePosition != -1 && currentVisiblePosition != viewModel.currentVisiblePosition.value) {
+                                viewModel.setCurrentVisiblePosition(currentVisiblePosition)
+                            }
+                        }
 
                         if (recyclerView.computeVerticalScrollOffset() > 0 && !recyclerView.canScrollVertically(1)
                             && viewModel.indicatorState.value!! != IndicatorState.LOADING) {

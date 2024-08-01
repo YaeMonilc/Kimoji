@@ -23,6 +23,24 @@
             tools:listitem="@layout/item_comic_image"
             tools:itemCount="3"/>
 
+        <LinearLayout
+            android:id="@+id/fragment_comic_viewer_image_control_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:background="#80000000"
+            android:visibility="@{ viewModel.controlPanelVisible ? View.VISIBLE : View.GONE, default = gone }"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_comic_viewer_image_list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+            <com.google.android.material.slider.Slider
+                android:id="@+id/fragment_comic_viewer_image_page_slider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stepSize="1" />
+        </LinearLayout>
+
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/fragment_comic_viewer_indicator"
             android:layout_width="match_parent"
