@@ -56,12 +56,16 @@ class ComicViewerFragment : BaseFragment(
                 (binding.fragmentComicViewerImageList.adapter as ComicImageAdapter).let { adapter ->
                     adapter.insertOrders(*it.toTypedArray())
 
-                    binding.fragmentComicViewerImagePageSlider.valueTo = (if (adapter.itemCount == 0) 1 else adapter.itemCount - 1).toFloat()
+                    binding.fragmentComicViewerImagePageSlider.valueTo = (if (adapter.itemCount == 0) 1 else if (adapter.itemCount - 1 == 0) 1 else adapter.itemCount - 1).toFloat()
                 }
             }
 
             viewModel.currentVisiblePosition.observe(viewLifecycleOwner) {
-                binding.fragmentComicViewerImagePageSlider.value = it.toFloat()
+                if (binding.fragmentComicViewerImagePageSlider.valueTo.toInt() == 1) {
+                    binding.fragmentComicViewerImagePageSlider.value = 1.toFloat()
+                } else {
+                    binding.fragmentComicViewerImagePageSlider.value = it.toFloat()
+                }
             }
 
             binding.fragmentComicViewerImagePageSlider.addOnChangeListener { _, value, fromUser ->
