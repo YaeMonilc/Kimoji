@@ -28,33 +28,22 @@ class ComicViewerModel : ViewModel() {
         get() = _controlPanelVisible
 
     object PageController {
-        private val _currentPage: MutableLiveData<Int> = MutableLiveData(0)
-        val currentPage: LiveData<Int>
-            get() = _currentPage
+        var currentPage: Int = 0
+        var totalPage: Int = 999
 
-        private val _totalPage: MutableLiveData<Int> = MutableLiveData(999)
-        val totalPage: LiveData<Int>
-            get() = _totalPage
-
-        fun nextPage(): Int {
-            _currentPage.postValue(
-                _currentPage.value!!.plus(1)
-            )
-
-            return _currentPage.value!!.plus(1)
-        }
+        fun nextPage() = ++currentPage
 
         fun reset() {
-            _currentPage.postValue(0)
-            _totalPage.postValue(999)
+            currentPage = 0
+            totalPage = 999
         }
 
         fun set(
             currentPage: Int,
             totalPage: Int
         ) {
-            _currentPage.postValue(currentPage)
-            _totalPage.postValue(totalPage)
+            this.currentPage = currentPage
+            this.totalPage = totalPage
         }
     }
 
@@ -64,7 +53,7 @@ class ComicViewerModel : ViewModel() {
         order: String = "1",
         exceptionHandler: (Exception) -> Unit
     ): Boolean {
-        if (PageController.currentPage.value!! >= PageController.totalPage.value!!) {
+        if (PageController.currentPage >= PageController.totalPage) {
             return false
         }
 
