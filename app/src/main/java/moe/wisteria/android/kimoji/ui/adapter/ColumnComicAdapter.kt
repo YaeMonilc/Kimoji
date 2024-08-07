@@ -62,8 +62,10 @@ class ColumnComicAdapter(
     fun insertComic(
         baseComic: BaseComic
     ) {
-        _comicList.add(baseComic)
-        notifyItemInserted(_comicList.size)
+        if (!_comicList.contains(baseComic)) {
+            _comicList.add(baseComic)
+            notifyItemInserted(_comicList.size)
+        }
     }
 
     fun insertComics(
